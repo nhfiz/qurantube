@@ -10,247 +10,193 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         :root {
-            --bg: #FAFAFA;
-            --surface: #FFFFFF;
-            --surface-alt: #F8F7F4;
-            --line: #E8E6E1;
-            --text: #2C2C2C;
-            --text-light: #8A8A8A;
-            --primary: #FF6B6B;
-            --primary-soft: #FFF0F0;
-            --secondary: #4ECDC4;
-            --secondary-soft: #E8FAF8;
-            --green: #34C759;
-            --green-soft: #E8F9EE;
-            --purple: #9B87F5;
-            --purple-soft: #F3F0FF;
-            --blue: #5AC8FA;
-            --blue-soft: #E8F4FD;
-            --orange: #FF9F0A;
-            --orange-soft: #FFF5E0;
-            --radius: 16px;
-            --radius-sm: 12px;
-            --shadow: 0 2px 12px rgba(0,0,0,0.06);
-            --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+            --bg:#FAFAFA; --surface:#FFFFFF; --surface-alt:#F8F7F4; --line:#E8E6E1;
+            --text:#2C2C2C; --text-light:#8A8A8A; --primary:#FF6B6B; --primary-soft:#FFF0F0;
+            --secondary:#4ECDC4; --secondary-soft:#E8FAF8; --green:#34C759; --green-soft:#E8F9EE;
+            --purple:#9B87F5; --purple-soft:#F3F0FF; --blue:#5AC8FA; --blue-soft:#E8F4FD;
+            --orange:#FF9F0A; --orange-soft:#FFF5E0; --radius:16px; --radius-sm:12px;
+            --shadow:0 2px 12px rgba(0,0,0,0.06); --shadow-lg:0 8px 30px rgba(0,0,0,0.12);
         }
+        *{box-sizing:border-box;margin:0;padding:0} html{scroll-behavior:smooth}
+        body{font-family:"Nunito",sans-serif;background:var(--bg);color:var(--text);line-height:1.5;padding-bottom:80px}
+        button,input{font:inherit}
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
-        body { font-family: "Nunito", sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; padding-bottom: 80px; }
-        button, input { font: inherit; }
+        .topbar{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+        html.fullscreen-active .topbar{display:none}
+        .topbar-inner{max-width:1320px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px}
+        .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;color:var(--text);white-space:nowrap}
+        .brand i{color:var(--primary);font-size:22px}
+        .searchbar{display:grid;grid-template-columns:1fr 48px;gap:8px;align-items:center;flex:1;max-width:560px}
+        .search-input{width:100%;border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:10px 16px;font-size:14px;transition:border-color .15s}
+        .search-input:focus{outline:none;border-color:var(--primary)}
+        .search-btn{border:none;background:var(--primary);color:#fff;border-radius:50%;cursor:pointer;height:42px;width:42px;display:grid;place-items:center;transition:background .15s,transform .15s}
+        .search-btn:hover{background:#E55555;transform:scale(1.05)}
+        .search-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
 
-        .topbar {
-            position: sticky; top: 0; z-index: 100;
-            background: rgba(255,255,255,0.9); backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--line);
-        }
-        html.fullscreen-active .topbar { display: none; }
-        .topbar-inner { max-width: 1320px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; gap: 16px; }
-        .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 20px; color: var(--text); white-space: nowrap; }
-        .brand i { color: var(--primary); font-size: 22px; }
-        .searchbar { display: grid; grid-template-columns: 1fr 48px; gap: 8px; align-items: center; flex: 1; max-width: 560px; }
-        .search-input { width: 100%; border: 1.5px solid var(--line); background: var(--surface); border-radius: 999px; padding: 10px 16px; font-size: 14px; transition: border-color 0.15s; }
-        .search-input:focus { outline: none; border-color: var(--primary); }
-        .search-btn { border: none; background: var(--primary); color: #fff; border-radius: 50%; cursor: pointer; height: 42px; width: 42px; display: grid; place-items: center; transition: background 0.15s, transform 0.15s; }
-        .search-btn:hover { background: #E55555; transform: scale(1.05); }
-        .search-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .page{max-width:1320px;margin:20px auto 40px;padding:0 20px;display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:24px;align-items:start}
+        .page.theater-mode{grid-template-columns:1fr;max-width:100%;padding:0}
+        .page.theater-mode .watch-column{grid-template-columns:1fr;padding:0}
+        .page.theater-mode .sidebar{position:static;width:100%;max-width:720px;margin:24px auto}
+        .page.theater-mode .player-wrap.theater{border-radius:var(--radius) var(--radius) 0 0;max-width:800px;margin:0 auto}
+        .watch-column{display:grid;gap:20px}
 
-        .page { max-width: 1320px; margin: 20px auto 40px; padding: 0 20px; display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; align-items: start; }
-        .page.theater-mode { grid-template-columns: 1fr; max-width: 100%; padding: 0; }
-        .page.theater-mode .watch-column { grid-template-columns: 1fr; padding: 0; }
-        .page.theater-mode .sidebar { position: static; width: 100%; max-width: 720px; margin: 24px auto; }
-        .page.theater-mode .player-wrap.theater { border-radius: var(--radius) var(--radius) 0 0; max-width: 800px; margin: 0 auto; }
-        .watch-column { display: grid; gap: 20px; }
+        .quick-chips{display:flex;flex-wrap:wrap;gap:8px}
+        .quick-chip{border:1.5px solid var(--line);background:var(--surface);color:var(--text);border-radius:999px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s}
+        .quick-chip:hover{background:var(--primary-soft);border-color:var(--primary);color:var(--primary)}
 
-        .quick-chips { display: flex; flex-wrap: wrap; gap: 8px; }
-        .quick-chip { border: 1.5px solid var(--line); background: var(--surface); color: var(--text); border-radius: 999px; padding: 8px 14px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.15s; }
-        .quick-chip:hover { background: var(--primary-soft); border-color: var(--primary); color: var(--primary); }
+        .player-wrap{background:#111;border-radius:var(--radius);overflow:hidden;aspect-ratio:16/9;display:none;box-shadow:var(--shadow);position:relative;transition:border-radius .3s,max-width .3s,box-shadow .3s}
+        .player-wrap.visible{display:block}
+        .player-wrap.minimized{max-width:300px;aspect-ratio:16/9;box-shadow:var(--shadow-lg);position:fixed;bottom:90px;right:20px;border-radius:var(--radius-sm);z-index:90;animation:slideUp .25s ease}
+        @keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+        .player-wrap.controls-hidden .overlay{opacity:0}
+        .player-wrap:fullscreen{width:100vw;height:100vh;border-radius:0;display:block!important;position:fixed;top:0;left:0}
 
-        .player-wrap {
-            background: #111; border-radius: var(--radius); overflow: hidden; aspect-ratio: 16/9;
-            display: none; box-shadow: var(--shadow); position: relative;
-            transition: border-radius 0.3s, max-width 0.3s, box-shadow 0.3s;
-        }
-        .player-wrap.visible { display: block; }
-        .player-wrap.minimized {
-            max-width: 300px; aspect-ratio: 16/9; box-shadow: var(--shadow-lg);
-            position: fixed; bottom: 90px; right: 20px; border-radius: var(--radius-sm); z-index: 90;
-            animation: slideUp 0.25s ease;
-        }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-        .player-wrap.controls-hidden .overlay { opacity: 0; }
-        .player-wrap:fullscreen { width: 100vw; height: 100vh; border-radius: 0; display: block !important; position: fixed; top: 0; left: 0; }
+        #youtube-player{width:100%;height:100%}
+        .player-shield{position:absolute;inset:0;z-index:1;background:transparent}
+        .overlay{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(180deg,rgba(0,0,0,.25),transparent 30%,transparent 60%,rgba(0,0,0,.6));pointer-events:none;transition:opacity .2s,visibility .2s}
+        .overlay.hidden{display:none}
+        .player-bottom{pointer-events:auto;padding:12px 14px;display:flex;align-items:center;gap:10px;position:absolute;bottom:0;width:100%;flex-wrap:wrap}
+        .player-wrap.controls-hidden .player-bottom{pointer-events:none}
+        .player-progress{flex:1;min-width:80px}
+        .progress-bar{height:6px;border-radius:999px;overflow:hidden;cursor:pointer;background:rgba(255,255,255,.2)}
+        .progress-value{height:100%;width:0%;background:var(--primary);border-radius:999px;transition:width .1s linear}
+        .progress-text{color:rgba(255,255,255,.85);font-size:12px;font-weight:700;text-align:center;margin-top:4px;min-width:90px}
+        .player-controls{display:flex;gap:6px}
+        .p-ctrl{border:none;border-radius:999px;padding:8px 12px;background:rgba(255,255,255,.15);color:#fff;cursor:pointer;font-weight:700;backdrop-filter:blur(8px);display:flex;align-items:center;gap:5px;font-size:13px;transition:background .15s}
+        .p-ctrl.primary{background:rgba(255,107,107,.8)}
+        .p-ctrl:hover{background:rgba(255,255,255,.25)}
+        .p-ctrl.primary:hover{background:var(--primary)}
 
-        #youtube-player { width: 100%; height: 100%; }
-        .player-shield { position: absolute; inset: 0; z-index: 1; background: transparent; }
+        .video-info{display:none;gap:6px}
+        .video-info.visible{display:flex;flex-direction:column}
+        .video-info.minimized{display:none!important}
+        .page.theater-mode .video-info.visible{max-width:800px;margin:16px auto 0}
+        .video-title{font-size:clamp(17px,2vw,22px);line-height:1.3;font-weight:800}
+        .video-meta{display:flex;flex-wrap:wrap;gap:6px;color:var(--text-light);font-size:13px;font-weight:600}
+        .meta-badge{padding:4px 10px;border-radius:999px;background:var(--surface-alt)}
 
-        .overlay {
-            position: absolute; inset: 0; z-index: 2;
-            display: flex; flex-direction: column; justify-content: space-between;
-            background: linear-gradient(180deg, rgba(0,0,0,0.25), transparent 30%, transparent 60%, rgba(0,0,0,0.6));
-            pointer-events: none; transition: opacity 0.2s, visibility 0.2s;
-        }
-        .overlay.hidden { display: none; }
-        .player-bottom { pointer-events: auto; padding: 12px 14px; display: flex; align-items: center; gap: 10px; position: absolute; bottom: 0; width: 100%; flex-wrap: wrap; }
-        .player-wrap.controls-hidden .player-bottom { pointer-events: none; }
+        .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+        .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+        .card-head h3{font-size:15px;font-weight:800;display:flex;align-items:center;gap:8px}
+        .card-head .icon{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-size:13px;color:#fff}
+        .card-head span{color:var(--text-light);font-size:12px;font-weight:600}
 
-        .player-progress { flex: 1; min-width: 80px; }
-        .progress-bar { height: 6px; border-radius: 999px; overflow: hidden; cursor: pointer; background: rgba(255,255,255,0.2); }
-        .progress-value { height: 100%; width: 0%; background: var(--primary); border-radius: 999px; transition: width 0.1s linear; }
-        .progress-text { color: rgba(255,255,255,0.85); font-size: 12px; font-weight: 700; text-align: center; margin-top: 4px; min-width: 90px; }
-        .player-controls { display: flex; gap: 6px; }
-        .p-ctrl { border: none; border-radius: 999px; padding: 8px 12px; background: rgba(255,255,255,0.15); color: #fff; cursor: pointer; font-weight: 700; backdrop-filter: blur(8px); display: flex; align-items: center; gap: 5px; font-size: 13px; transition: background 0.15s; }
-        .p-ctrl.primary { background: rgba(255,107,107,0.8); }
-        .p-ctrl:hover { background: rgba(255,255,255,0.25); }
-        .p-ctrl.primary:hover { background: var(--primary); }
+        .results{display:grid;gap:10px}
+        .result-item{display:grid;grid-template-columns:150px 1fr;gap:10px;padding:8px;border-radius:var(--radius-sm);cursor:pointer;border:1px solid transparent;transition:all .15s}
+        .result-item:hover{border-color:var(--line);background:var(--surface-alt)}
+        .result-item.active{border-color:var(--secondary);background:var(--secondary-soft)}
+        .result-thumb{position:relative;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:var(--surface-alt)}
+        .result-thumb img{width:100%;height:100%;object-fit:cover}
+        .result-thumb .duration{position:absolute;right:6px;bottom:6px;background:rgba(0,0,0,.75);color:#fff;border-radius:4px;padding:2px 5px;font-size:10px;font-weight:700}
+        .result-body{min-width:0;padding:2px 0}
+        .result-body strong{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font-size:14px;font-weight:700;margin-bottom:3px}
+        .result-body p{color:var(--text-light);font-size:12px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+        .empty{padding:24px;border-radius:var(--radius-sm);background:var(--surface-alt);color:var(--text-light);text-align:center;font-size:14px;font-weight:600}
 
-        .video-info { display: none; gap: 6px; }
-        .video-info.visible { display: flex; flex-direction: column; }
-        .video-info.minimized { display: none !important; }
-        .page.theater-mode .video-info.visible { max-width: 800px; margin: 16px auto 0; }
-        .video-title { font-size: clamp(17px, 2vw, 22px); line-height: 1.3; font-weight: 800; }
-        .video-meta { display: flex; flex-wrap: wrap; gap: 6px; color: var(--text-light); font-size: 13px; font-weight: 600; }
-        .meta-badge { padding: 4px 10px; border-radius: 999px; background: var(--surface-alt); }
+        .loading-more{text-align:center;padding:12px;color:var(--text-light);display:none;font-weight:600;font-size:13px}
+        .loading-more.active{display:block}
+        .loading-more i{animation:spin 1s linear infinite;margin-right:6px}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .load-more-btn{width:100%;padding:10px;margin-top:8px;border:1px solid var(--line);background:var(--surface);border-radius:var(--radius-sm);color:var(--text);font-weight:700;cursor:pointer;transition:background .15s;font-size:13px}
+        .load-more-btn:hover:not(:disabled){background:var(--surface-alt);border-color:var(--text-light)}
+        .load-more-btn:disabled{opacity:.5;cursor:not-allowed}
+        .pagination-info{text-align:center;color:var(--text-light);font-size:12px;margin-top:6px;font-weight:600}
 
-        .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); }
-        .card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-        .card-head h3 { font-size: 15px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
-        .card-head .icon { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; font-size: 13px; color: #fff; }
-        .card-head span { color: var(--text-light); font-size: 12px; font-weight: 600; }
+        .related-list{display:grid;gap:8px}
+        .related-item{display:grid;grid-template-columns:100px 1fr;gap:8px;padding:6px;border-radius:10px;cursor:pointer;border:1px solid transparent;transition:all .15s}
+        .related-item:hover,.related-item.active{border-color:var(--line);background:var(--surface-alt)}
+        .related-thumb{position:relative;aspect-ratio:16/9;border-radius:8px;overflow:hidden;background:var(--surface-alt)}
+        .related-thumb img{width:100%;height:100%;object-fit:cover}
+        .related-thumb .related-duration{position:absolute;right:4px;bottom:4px;background:rgba(0,0,0,.75);color:#fff;border-radius:3px;padding:1px 4px;font-size:9px;font-weight:700}
+        .related-body strong{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font-size:13px;font-weight:700;margin-bottom:2px}
+        .related-body p{color:var(--text-light);font-size:11px}
 
-        .results { display: grid; gap: 10px; }
-        .result-item { display: grid; grid-template-columns: 150px 1fr; gap: 10px; padding: 8px; border-radius: var(--radius-sm); cursor: pointer; border: 1px solid transparent; transition: all 0.15s; }
-        .result-item:hover { border-color: var(--line); background: var(--surface-alt); }
-        .result-item.active { border-color: var(--secondary); background: var(--secondary-soft); }
-        .result-thumb { position: relative; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; background: var(--surface-alt); }
-        .result-thumb img { width: 100%; height: 100%; object-fit: cover; }
-        .result-thumb .duration { position: absolute; right: 6px; bottom: 6px; background: rgba(0,0,0,0.75); color: #fff; border-radius: 4px; padding: 2px 5px; font-size: 10px; font-weight: 700; }
-        .result-body { min-width: 0; padding: 2px 0; }
-        .result-body strong { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; font-size: 14px; font-weight: 700; margin-bottom: 3px; }
-        .result-body p { color: var(--text-light); font-size: 12px; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
-        .empty { padding: 24px; border-radius: var(--radius-sm); background: var(--surface-alt); color: var(--text-light); text-align: center; font-size: 14px; font-weight: 600; }
+        .sidebar{position:sticky;top:80px;align-self:start;display:grid;gap:16px}
+        .murottal-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+        .murottal-top{display:grid;grid-template-columns:48px 1fr;gap:10px;align-items:center;margin-bottom:14px}
+        .murottal-cover{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--secondary));color:#fff;display:grid;place-items:center;font-size:18px;flex-shrink:0}
+        .murottal-now strong{display:block;font-size:14px;font-weight:800;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .murottal-now span{color:var(--text-light);font-size:12px}
 
-        .loading-more { text-align: center; padding: 12px; color: var(--text-light); display: none; font-weight: 600; font-size: 13px; }
-        .loading-more.active { display: block; }
-        .loading-more i { animation: spin 1s linear infinite; margin-right: 6px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .load-more-btn { width: 100%; padding: 10px; margin-top: 8px; border: 1px solid var(--line); background: var(--surface); border-radius: var(--radius-sm); color: var(--text); font-weight: 700; cursor: pointer; transition: background 0.15s; font-size: 13px; }
-        .load-more-btn:hover:not(:disabled) { background: var(--surface-alt); border-color: var(--text-light); }
-        .load-more-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .pagination-info { text-align: center; color: var(--text-light); font-size: 12px; margin-top: 6px; font-weight: 600; }
+        .audio-controls{display:flex;align-items:center;gap:6px;justify-content:center}
+        .a-btn{width:40px;height:40px;border-radius:50%;border:none;cursor:pointer;background:var(--surface-alt);color:var(--text);font-size:14px;display:grid;place-items:center;transition:all .15s}
+        .a-btn:hover{background:var(--line);transform:scale(1.06)}
+        .a-btn.primary{width:46px;height:46px;background:var(--green);color:#fff;box-shadow:0 3px 12px rgba(52,199,89,.3)}
+        .a-btn.primary:hover{background:#2DB84E;transform:scale(1.1)}
 
-        .related-list { display: grid; gap: 8px; }
-        .related-item { display: grid; grid-template-columns: 100px 1fr; gap: 8px; padding: 6px; border-radius: 10px; cursor: pointer; border: 1px solid transparent; transition: all 0.15s; }
-        .related-item:hover, .related-item.active { border-color: var(--line); background: var(--surface-alt); }
-        .related-thumb { position: relative; aspect-ratio: 16/9; border-radius: 8px; overflow: hidden; background: var(--surface-alt); }
-        .related-thumb img { width: 100%; height: 100%; object-fit: cover; }
-        .related-thumb .related-duration { position: absolute; right: 4px; bottom: 4px; background: rgba(0,0,0,0.75); color: #fff; border-radius: 3px; padding: 1px 4px; font-size: 9px; font-weight: 700; }
-        .related-body strong { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; font-size: 13px; font-weight: 700; margin-bottom: 2px; }
-        .related-body p { color: var(--text-light); font-size: 11px; }
+        .repeat-pill{display:flex;align-items:center;gap:4px;background:var(--surface-alt);border-radius:999px;padding:4px;margin:10px auto 0;width:fit-content}
+        .r-opt{height:30px;border-radius:999px;border:none;cursor:pointer;background:transparent;color:var(--text-light);font-size:12px;font-weight:700;padding:0 10px;transition:all .15s}
+        .r-opt:hover{background:var(--line)}
+        .r-opt.active{background:var(--orange-soft);color:var(--orange)}
+        .r-opt.active:hover{background:var(--orange);color:#fff}
 
-        /* Sidebar */
-        .sidebar { position: sticky; top: 80px; align-self: start; display: grid; gap: 16px; }
-        .murottal-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); }
-        .murottal-top { display: grid; grid-template-columns: 48px 1fr; gap: 10px; align-items: center; margin-bottom: 14px; }
-        .murottal-cover { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--green), var(--secondary)); color: #fff; display: grid; place-items: center; font-size: 18px; flex-shrink: 0; }
-        .murottal-now strong { display: block; font-size: 14px; font-weight: 800; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .murottal-now span { color: var(--text-light); font-size: 12px; }
+        .murottal-search{margin:14px 0 10px;position:relative}
+        .murottal-search input{width:100%;border:1px solid var(--line);background:var(--surface-alt);border-radius:10px;padding:9px 12px 9px 34px;font-size:13px}
+        .murottal-search input:focus{outline:none;border-color:var(--green)}
+        .murottal-search i{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text-light);font-size:12px;pointer-events:none}
 
-        /* Audio Controls */
-        .audio-controls { display: flex; align-items: center; gap: 6px; justify-content: center; }
-        .a-btn { width: 40px; height: 40px; border-radius: 50%; border: none; cursor: pointer; background: var(--surface-alt); color: var(--text); font-size: 14px; display: grid; place-items: center; transition: all 0.15s; }
-        .a-btn:hover { background: var(--line); transform: scale(1.06); }
-        .a-btn.primary { width: 46px; height: 46px; background: var(--green); color: #fff; box-shadow: 0 3px 12px rgba(52,199,89,0.3); }
-        .a-btn.primary:hover { background: #2DB84E; transform: scale(1.1); }
-        .a-btn.active { background: var(--orange-soft); color: var(--orange); }
-        .a-btn.active:hover { background: var(--orange); color: #fff; }
+        .track-list{display:grid;gap:6px;max-height:300px;overflow-y:auto;padding-right:2px}
+        .track-list::-webkit-scrollbar{width:4px}
+        .track-list::-webkit-scrollbar-thumb{background:var(--line);border-radius:2px}
+        .track-item{width:100%;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 10px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s}
+        .track-item:hover{border-color:var(--green);background:var(--green-soft)}
+        .track-item.active{border-color:var(--green);background:var(--green-soft)}
+        .track-item .num{width:24px;height:24px;border-radius:50%;background:var(--surface-alt);display:grid;place-items:center;font-size:11px;font-weight:800;color:var(--text-light);flex-shrink:0}
+        .track-item.active .num{background:var(--green);color:#fff}
+        .track-item .info{min-width:0}
+        .track-item strong{display:block;font-size:12px;font-weight:700}
+        .track-item span{font-size:11px;color:var(--text-light)}
+        .track-item.no-results{text-align:center;padding:16px;color:var(--text-light);cursor:default;border:none;background:transparent}
+        .track-item.no-results:hover{border-color:transparent;background:transparent}
 
-        /* Repeat Control */
-        .repeat-control { display: flex; align-items: center; gap: 6px; background: var(--surface-alt); border-radius: 999px; padding: 4px; margin: 10px auto 0; width: fit-content; }
-        .repeat-control .r-btn {
-            height: 32px; border-radius: 999px; border: none; cursor: pointer;
-            background: transparent; color: var(--text-light); font-size: 12px; font-weight: 700;
-            padding: 0 12px; transition: all 0.15s; display: flex; align-items: center; gap: 4px;
-        }
-        .repeat-control .r-btn:hover { background: var(--line); }
-        .repeat-control .r-btn.active { background: var(--orange-soft); color: var(--orange); }
-        .repeat-control .r-btn.active:hover { background: var(--orange); color: #fff; }
-        .repeat-control .r-btn i { font-size: 13px; }
+        .volume-row{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px;font-weight:600;color:var(--text-light)}
+        .volume-row i{font-size:14px}
+        input[type="range"]{flex:1;accent-color:var(--green);cursor:pointer;height:4px}
+        .vol-val{font-size:11px;min-width:28px;text-align:right;font-weight:700}
 
-        .murottal-search { margin: 14px 0 10px; position: relative; }
-        .murottal-search input { width: 100%; border: 1px solid var(--line); background: var(--surface-alt); border-radius: 10px; padding: 9px 12px 9px 34px; font-size: 13px; }
-        .murottal-search input:focus { outline: none; border-color: var(--green); }
-        .murottal-search i { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-light); font-size: 12px; pointer-events: none; }
+        .expand-btn{position:absolute;inset:0;z-index:6;border:none;background:transparent;color:#fff;cursor:pointer;display:none;align-items:center;justify-content:center;font-size:24px;transition:background .2s,opacity .2s;opacity:0}
+        .player-wrap.minimized .expand-btn{display:flex}
+        .expand-btn:hover{background:rgba(0,0,0,.4);opacity:1}
 
-        .track-list { display: grid; gap: 6px; max-height: 280px; overflow-y: auto; padding-right: 2px; }
-        .track-list::-webkit-scrollbar { width: 4px; }
-        .track-list::-webkit-scrollbar-thumb { background: var(--line); border-radius: 2px; }
-        .track-item { width: 100%; text-align: left; border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 8px 10px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.15s; }
-        .track-item:hover { border-color: var(--green); background: var(--green-soft); }
-        .track-item.active { border-color: var(--green); background: var(--green-soft); }
-        .track-item .num { width: 24px; height: 24px; border-radius: 50%; background: var(--surface-alt); display: grid; place-items: center; font-size: 11px; font-weight: 800; color: var(--text-light); flex-shrink: 0; }
-        .track-item.active .num { background: var(--green); color: #fff; }
-        .track-item .info { min-width: 0; }
-        .track-item strong { display: block; font-size: 12px; font-weight: 700; }
-        .track-item span { font-size: 11px; color: var(--text-light); }
-        .track-item.no-results { text-align: center; padding: 16px; color: var(--text-light); cursor: default; border: none; background: transparent; }
-        .track-item.no-results:hover { border-color: transparent; background: transparent; }
+        .player-wrap.minimized .player-shield{pointer-events:auto!important;z-index:3}
+        .player-wrap.minimized .overlay{opacity:1!important;visibility:visible!important;pointer-events:auto!important}
+        .player-wrap.minimized .overlay.hidden{display:flex!important;opacity:1!important}
+        .player-wrap.minimized .player-bottom{opacity:0;pointer-events:none!important}
 
-        .volume-row { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 13px; font-weight: 600; color: var(--text-light); }
-        .volume-row i { font-size: 14px; }
-        input[type="range"] { flex: 1; accent-color: var(--green); cursor: pointer; height: 4px; }
-        .vol-val { font-size: 11px; min-width: 28px; text-align: right; font-weight: 700; }
+        .player-wrap:hover .overlay{opacity:1!important;visibility:visible!important}
+        .player-wrap:hover .player-bottom{pointer-events:auto!important}
+        .player-wrap.controls-hidden .overlay{opacity:0;visibility:hidden}
+        .player-wrap:hover.controls-hidden .overlay{opacity:1!important;visibility:visible!important}
 
-        .expand-btn { position: absolute; inset: 0; z-index: 6; border: none; background: transparent; color: #fff; cursor: pointer; display: none; align-items: center; justify-content: center; font-size: 24px; transition: background 0.2s, opacity 0.2s; opacity: 0; }
-        .player-wrap.minimized .expand-btn { display: flex; }
-        .expand-btn:hover { background: rgba(0,0,0,0.4); opacity: 1; }
+        .mobile-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:95;background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-top:1px solid var(--line);padding:10px 14px;box-shadow:0 -4px 20px rgba(0,0,0,.06)}
+        .mobile-bar-inner{max-width:600px;margin:0 auto;display:flex;align-items:center;gap:10px}
+        .mobile-bar .m-track{flex:1;min-width:0}
+        .mobile-bar .m-track strong{display:block;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .mobile-bar .m-track span{font-size:11px;color:var(--text-light)}
+        .mobile-bar .m-btns{display:flex;align-items:center;gap:4px}
+        .mobile-bar .m-btn{width:36px;height:36px;border-radius:50%;border:none;background:var(--surface-alt);color:var(--text);font-size:14px;cursor:pointer;display:grid;place-items:center;transition:background .15s}
+        .mobile-bar .m-btn.play-btn{background:var(--green);color:#fff;width:40px;height:40px}
+        .mobile-bar .m-btn.rep-btn{font-size:12px}
+        .mobile-bar .m-btn.rep-btn.active{background:var(--orange-soft);color:var(--orange)}
 
-        .player-wrap.minimized .player-shield { pointer-events: auto !important; z-index: 3; }
-        .player-wrap.minimized .overlay { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
-        .player-wrap.minimized .overlay.hidden { display: flex !important; opacity: 1 !important; }
-        .player-wrap.minimized .player-bottom { opacity: 0; pointer-events: none !important; }
+        .toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(8px);background:var(--text);color:#fff;padding:10px 16px;border-radius:999px;font-size:13px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:200}
+        .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-        .player-wrap:hover .overlay { opacity: 1 !important; visibility: visible !important; }
-        .player-wrap:hover .player-bottom { pointer-events: auto !important; }
-        .player-wrap.controls-hidden .overlay { opacity: 0; visibility: hidden; }
-        .player-wrap:hover.controls-hidden .overlay { opacity: 1 !important; visibility: visible !important; }
-
-        /* Mobile Sticky Audio Bar */
-        .mobile-bar {
-            display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 95;
-            background: rgba(255,255,255,0.95); backdrop-filter: blur(16px);
-            border-top: 1px solid var(--line); padding: 10px 14px;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
-        }
-        .mobile-bar-inner { max-width: 600px; margin: 0 auto; display: flex; align-items: center; gap: 10px; }
-        .mobile-bar .m-track { flex: 1; min-width: 0; }
-        .mobile-bar .m-track strong { display: block; font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .mobile-bar .m-track span { font-size: 11px; color: var(--text-light); }
-        .mobile-bar .m-btns { display: flex; align-items: center; gap: 4px; }
-        .mobile-bar .m-btn { width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--surface-alt); color: var(--text); font-size: 14px; cursor: pointer; display: grid; place-items: center; transition: background 0.15s; }
-        .mobile-bar .m-btn.play-btn { background: var(--green); color: #fff; width: 40px; height: 40px; }
-        .mobile-bar .m-btn.rep-btn { font-size: 12px; }
-        .mobile-bar .m-btn.rep-btn.active { background: var(--orange-soft); color: var(--orange); }
-
-        .toast { position: fixed; left: 50%; bottom: 90px; transform: translateX(-50%) translateY(8px); background: var(--text); color: #fff; padding: 10px 16px; border-radius: 999px; font-size: 13px; font-weight: 700; opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s; z-index: 200; }
-        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-        @media (max-width: 1024px) { .page { grid-template-columns: 1fr; } .sidebar { position: static; } }
-        @media (max-width: 760px) {
-            body { padding-bottom: 70px; }
-            .topbar-inner { flex-direction: column; gap: 8px; padding: 10px 14px; }
-            .searchbar { width: 100%; max-width: none; }
-            .page { padding: 0 12px; margin-top: 12px; }
-            .player-bottom { padding: 10px; gap: 6px; }
-            .p-ctrl { padding: 6px 10px; font-size: 12px; }
-            .player-progress { min-width: 60px; }
-            .result-item { grid-template-columns: 1fr; }
-            .result-thumb { max-width: 160px; margin: 0 auto; }
-            .related-item { grid-template-columns: 80px 1fr; }
-            /* Hide sidebar on mobile, show mobile bar instead */
-            .sidebar { display: none; }
-            .mobile-bar { display: block; }
-            .player-wrap.minimized { bottom: 80px; right: 12px; max-width: 240px; }
+        @media(max-width:1024px){.page{grid-template-columns:1fr}.sidebar{position:static}}
+        @media(max-width:760px){
+            body{padding-bottom:70px}
+            .topbar-inner{flex-direction:column;gap:8px;padding:10px 14px}
+            .searchbar{width:100%;max-width:none}
+            .page{padding:0 12px;margin-top:12px}
+            .player-bottom{padding:10px;gap:6px}
+            .p-ctrl{padding:6px 10px;font-size:12px}
+            .player-progress{min-width:60px}
+            .result-item{grid-template-columns:1fr}
+            .result-thumb{max-width:160px;margin:0 auto}
+            .related-item{grid-template-columns:80px 1fr}
+            .sidebar{display:none}
+            .mobile-bar{display:block}
+            .player-wrap.minimized{bottom:80px;right:12px;max-width:240px}
         }
     </style>
 </head>
@@ -260,7 +206,7 @@
             <div class="brand"><i class="fa-solid fa-mosque"></i><span>Murottal Kids</span></div>
             <div class="searchbar">
                 <input id="search-query" class="search-input" type="text" placeholder="Cari video...">
-                <button id="search-button" class="search-btn" type="button" aria-label="Cari"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <button id="search-button" class="search-btn" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
         </div>
     </header>
@@ -328,14 +274,15 @@
                     <button id="prev-btn" class="a-btn" type="button" title="Sebelumnya"><i class="fa-solid fa-backward-step"></i></button>
                     <button id="toggle-audio" class="a-btn primary" type="button"><i class="fa-solid fa-play"></i></button>
                     <button id="next-btn" class="a-btn" type="button" title="Selanjutnya"><i class="fa-solid fa-forward-step"></i></button>
+                    <button id="sync-btn" class="a-btn" type="button" title="Sync"><i class="fa-solid fa-rotate-right"></i></button>
                 </div>
-                <div class="repeat-control" id="repeat-control">
-                    <button class="r-btn active" data-val="0" title="Nonaktif"><i class="fa-solid fa-ban"></i> Off</button>
-                    <button class="r-btn" data-val="1" title="1×">1×</button>
-                    <button class="r-btn" data-val="2" title="2×">2×</button>
-                    <button class="r-btn" data-val="3" title="3×">3×</button>
-                    <button class="r-btn" data-val="5" title="5×">5×</button>
-                    <button class="r-btn" data-val="10" title="10×">10×</button>
+                <div class="repeat-pill" id="repeat-pill">
+                    <button class="r-opt active" data-val="0">Off</button>
+                    <button class="r-opt" data-val="1">1×</button>
+                    <button class="r-opt" data-val="2">2×</button>
+                    <button class="r-opt" data-val="3">3×</button>
+                    <button class="r-opt" data-val="5">5×</button>
+                    <button class="r-opt" data-val="10">10×</button>
                 </div>
                 <div class="murottal-search"><i class="fa-solid fa-magnifying-glass"></i><input id="murottal-search" type="text" placeholder="Cari surat..."></div>
                 <div id="track-list" class="track-list"></div>
@@ -348,7 +295,6 @@
         </aside>
     </main>
 
-    <!-- Mobile Sticky Audio Bar -->
     <div class="mobile-bar" id="mobile-bar">
         <div class="mobile-bar-inner">
             <div class="m-track">
@@ -371,15 +317,14 @@
     <script>
         const CFG = {
             KEY: "AIzaSyBG0R-WYVBo_N5CqVka1ZuaMW12MJMWGCI",
-            STORAGE: "mk-v2",
+            STORAGE: "mk-v3",
             PER_PAGE: 10, PER_SCROLL: 5, MAX_INLINE: 30,
-            SCROLL_TH: 200, SAVE_MS: 600, TOAST_MS: 2000,
-            REPEAT_OPTIONS: [0, 1, 2, 3, 5, 10]
+            SCROLL_TH: 200, SAVE_MS: 600, TOAST_MS: 2000
         };
 
         const S = {
             player: null, results: [], allResults: [], vid: null,
-            tid: 0, raf: null, repeat: 0, repeatIdx: 0, // repeatIdx = index in REPEAT_OPTIONS
+            tid: 0, raf: null, repeat: 0, // 0 = off, >0 = repeat count
             pending: null, overlayT: null, filtered: null,
             theater: false, fs: false, npt: null, query: "",
             loading: false, more: true, busy: false, cache: new Map(),
@@ -454,7 +399,53 @@
             {id:65,t:"At-Talaq",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/065.mp3"},
             {id:66,t:"At-Tahrim",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/066.mp3"},
             {id:67,t:"Al-Mulk",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/067.mp3"},
-            {id:68,t:"Al-Qalam",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/068.mp3"}
+            {id:68,t:"Al-Qalam",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/068.mp3"},
+            {id:69,t:"Al-Haqqah",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/069.mp3"},
+            {id:70,t:"Al-Ma'arij",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/070.mp3"},
+            {id:71,t:"Nuh",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/071.mp3"},
+            {id:72,t:"Al-Jinn",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/072.mp3"},
+            {id:73,t:"Al-Muzzammil",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/073.mp3"},
+            {id:74,t:"Al-Muddathir",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/074.mp3"},
+            {id:75,t:"Al-Qiyamah",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/075.mp3"},
+            {id:76,t:"Al-Insan",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/076.mp3"},
+            {id:77,t:"Al-Mursalat",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/077.mp3"},
+            {id:78,t:"An-Naba'",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/078.mp3"},
+            {id:79,t:"An-Nazi'at",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/079.mp3"},
+            {id:80,t:"'Abasa",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/080.mp3"},
+            {id:81,t:"At-Takwir",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/081.mp3"},
+            {id:82,t:"Al-Infitar",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/082.mp3"},
+            {id:83,t:"Al-Mutaffifin",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/083.mp3"},
+            {id:84,t:"Al-Insyiqaq",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/084.mp3"},
+            {id:85,t:"Al-Buruj",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/085.mp3"},
+            {id:86,t:"At-Tariq",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/086.mp3"},
+            {id:87,t:"Al-A'la",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/087.mp3"},
+            {id:88,t:"Al-Ghasyiyah",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/088.mp3"},
+            {id:89,t:"Al-Fajr",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/089.mp3"},
+            {id:90,t:"Al-Balad",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/090.mp3"},
+            {id:91,t:"Asy-Syams",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/091.mp3"},
+            {id:92,t:"Al-Lail",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/092.mp3"},
+            {id:93,t:"Ad-Duha",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/093.mp3"},
+            {id:94,t:"Al-Insyirah",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/094.mp3"},
+            {id:95,t:"At-Tin",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/095.mp3"},
+            {id:96,t:"Al-'Alaq",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/096.mp3"},
+            {id:97,t:"Al-Qadr",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/097.mp3"},
+            {id:98,t:"Al-Bayyinah",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/098.mp3"},
+            {id:99,t:"Az-Zalzalah",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/099.mp3"},
+            {id:100,t:"Al-'Adiyat",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/100.mp3"},
+            {id:101,t:"Al-Qari'ah",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/101.mp3"},
+            {id:102,t:"At-Takasur",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/102.mp3"},
+            {id:103,t:"Al-'Asr",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/103.mp3"},
+            {id:104,t:"Al-Humazah",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/104.mp3"},
+            {id:105,t:"Al-Fil",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/105.mp3"},
+            {id:106,t:"Quraisy",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/106.mp3"},
+            {id:107,t:"Al-Ma'un",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/107.mp3"},
+            {id:108,t:"Al-Kausar",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/108.mp3"},
+            {id:109,t:"Al-Kafirun",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/109.mp3"},
+            {id:110,t:"An-Nasr",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/110.mp3"},
+            {id:111,t:"Al-Lahab",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/111.mp3"},
+            {id:112,t:"Al-Ikhlas",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/112.mp3"},
+            {id:113,t:"Al-Falaq",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/113.mp3"},
+            {id:114,t:"An-Nas",r:"Mishary Al-Afasy",f:"https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/114.mp3"}
         ];
         S.filtered = [...tracks];
 
@@ -467,26 +458,24 @@
 
         const $ = id => document.getElementById(id);
         const D = {
-            q: $("search-query"), qBtn: $("search-button"),
-            res: $("results"), resCount: $("results-count"), resCard: $("results-card"),
-            pw: $("player-wrap"), overlay: $("overlay"), shield: $("player-shield"), expand: $("expand-btn"),
-            tv: $("toggle-video"), pbar: $("progress-bar"), pval: $("progress-value"), tdisp: $("time-display"),
-            title: $("current-title"), meta: $("current-meta"), vinfo: $("video-info"),
-            mp: $("main-page"), loading: $("loading-more"), moreBtn: $("load-more-btn"), pinfo: $("pagination-info"),
-            relSec: $("related-section"), relList: $("related-list"), relRef: $("refresh-related"),
-            tlist: $("track-list"), audio: $("murottal-audio"),
-            tinfo: $("track-info"), tstat: $("track-status"),
-            ta: $("toggle-audio"), prev: $("prev-btn"), next: $("next-btn"),
-            shuf: $("shuffle-btn"), sync: $("sync-btn"),
-            vol: $("audio-volume"), vval: $("vol-val"),
-            tsearch: $("murottal-search"),
-            tb: $("theater-btn"), fb: $("fullscreen-btn"),
-            toast: $("toast"), chips: document.querySelectorAll(".quick-chip"),
-            // Mobile bar
-            mBar: $("mobile-bar"), mTrackName: $("m-track-name"), mTrackStatus: $("m-track-status"),
-            mPlay: $("m-play"), mPrev: $("m-prev"), mNext: $("m-next"), mRep: $("m-rep"),
-            // Repeat
-            repControl: $("repeat-control"), repBtns: document.querySelectorAll(".repeat-control .r-btn")
+            q:$("search-query"), qBtn:$("search-button"),
+            res:$("results"), resCount:$("results-count"), resCard:$("results-card"),
+            pw:$("player-wrap"), overlay:$("overlay"), shield:$("player-shield"), expand:$("expand-btn"),
+            tv:$("toggle-video"), pbar:$("progress-bar"), pval:$("progress-value"), tdisp:$("time-display"),
+            title:$("current-title"), meta:$("current-meta"), vinfo:$("video-info"),
+            mp:$("main-page"), loading:$("loading-more"), moreBtn:$("load-more-btn"), pinfo:$("pagination-info"),
+            relSec:$("related-section"), relList:$("related-list"), relRef:$("refresh-related"),
+            tlist:$("track-list"), audio:$("murottal-audio"),
+            tinfo:$("track-info"), tstat:$("track-status"),
+            ta:$("toggle-audio"), prev:$("prev-btn"), next:$("next-btn"),
+            shuf:$("shuffle-btn"), sync:$("sync-btn"),
+            vol:$("audio-volume"), vval:$("vol-val"),
+            tsearch:$("murottal-search"),
+            tb:$("theater-btn"), fb:$("fullscreen-btn"),
+            toast:$("toast"), chips:document.querySelectorAll(".quick-chip"),
+            mBar:$("mobile-bar"), mTrackName:$("m-track-name"), mTrackStatus:$("m-track-status"),
+            mPlay:$("m-play"), mPrev:$("m-prev"), mNext:$("m-next"), mRep:$("m-rep"),
+            repOpts:document.querySelectorAll(".r-opt")
         };
 
         const esc = t => { const d=document.createElement("div"); d.textContent=t; return d.innerHTML; };
@@ -498,7 +487,7 @@
         const save = () => {
             if(S.saveT) return;
             S.saveT = setTimeout(()=>{
-                try{localStorage.setItem(CFG.STORAGE,JSON.stringify({q:D.q.value.trim(),r:S.results.slice(0,CFG.PER_PAGE),v:S.vid,t:S.tid,ri:S.repeatIdx,cr:S.repeat,vol:parseInt(D.vol.value),vis:D.pw.classList.contains("visible"),mini:D.pw.classList.contains("minimized"),time:S.player?.getCurrentTime?.()||0,play:S.player?.getPlayerState?.()===YT.PlayerState.PLAYING,th:S.theater,fs:S.fs,npt:S.npt,qry:S.query}));}catch(e){}
+                try{localStorage.setItem(CFG.STORAGE,JSON.stringify({q:D.q.value.trim(),r:S.results.slice(0,CFG.PER_PAGE),v:S.vid,t:S.tid,rep:S.repeat,vol:parseInt(D.vol.value),vis:D.pw.classList.contains("visible"),mini:D.pw.classList.contains("minimized"),time:S.player?.getCurrentTime?.()||0,play:S.player?.getPlayerState?.()===YT.PlayerState.PLAYING,th:S.theater,fs:S.fs,npt:S.npt,qry:S.query}));}catch(e){}
                 S.saveT=null;
             },CFG.SAVE_MS);
         };
@@ -556,9 +545,10 @@
             D.pval.style.width=d?`${(c/d)*100}%`:"0%";
         }
         function updIcons(playing){
-            D.tv.querySelector("i").className=`fa-solid ${playing?"fa-pause":"fa-play"}`;
-            D.ta.querySelector("i").className=`fa-solid ${D.audio.paused?"fa-play":"fa-pause"}`;
-            D.mPlay.querySelector("i").className=`fa-solid ${D.audio.paused?"fa-play":"fa-pause"}`;
+            const icon=playing?"fa-pause":"fa-play";
+            D.tv.querySelector("i").className=`fa-solid ${icon}`;
+            D.ta.querySelector("i").className=`fa-solid ${icon}`;
+            D.mPlay.querySelector("i").className=`fa-solid ${icon}`;
         }
 
         function showOvl(){D.overlay.classList.remove("hidden");}
@@ -733,38 +723,34 @@
             D.tlist.appendChild(frag);
         }
 
-        // Repeat
-        function setRepeat(idx){
-            S.repeatIdx = Math.max(0, Math.min(idx, CFG.REPEAT_OPTIONS.length - 1));
-            S.repeat = CFG.REPEAT_OPTIONS[S.repeatIdx];
-            updRepUI(); save();
+        // Repeat UI
+        function setRepeat(val){
+            S.repeat = parseInt(val);
+            D.repOpts.forEach(o=>o.classList.toggle("active",parseInt(o.dataset.val)===S.repeat));
+            D.mRep.classList.toggle("active",S.repeat>0);
+            updStatus(); save();
+            if(S.repeat>0) toast(`Pengulangan ${S.repeat}×`);
+            else toast("Pengulangan nonaktif");
         }
 
-        function updRepUI(){
-            D.repBtns.forEach((btn, i) => btn.classList.toggle("active", i === S.repeatIdx));
-            // Mobile bar
-            D.mRep.classList.toggle("active", S.repeat > 0);
-            D.mRep.title = S.repeat > 0 ? `Ulang ${S.repeat}×` : "Nonaktif";
-            // Status text
-            if(S.repeat > 0){
-                const p = Math.min(S.repeat, S.maxR);
-                D.tstat.textContent = `Ulang ${S.repeat}× • Putaran ${p}/${S.repeat}`;
+        function updStatus(){
+            if(D.audio.paused){
+                D.tstat.textContent="Dijeda"; D.mTrackStatus.textContent="Dijeda";
             } else {
-                D.tstat.textContent = D.audio.paused ? "Dijeda" : "Sedang diputar";
+                if(S.repeat>0) {
+                    D.tstat.textContent=`Ulang ${S.repeat}×`; D.mTrackStatus.textContent=`Ulang ${S.repeat}×`;
+                } else {
+                    D.tstat.textContent="Sedang diputar"; D.mTrackStatus.textContent="Diputar";
+                }
             }
         }
 
         function selTrack(idx,auto=true){
-            S.tid=idx; S.repeat=0;
+            S.tid=idx;
             D.audio.src=tracks[idx].f; D.audio.load();
-            const name = tracks[idx].t;
-            D.tinfo.textContent=name;
-            D.mTrackName.textContent=name;
-            D.tstat.textContent=tracks[idx].r;
-            D.mTrackStatus.textContent=tracks[idx].r;
-            D.ta.querySelector("i").className="fa-solid fa-play";
-            D.mPlay.querySelector("i").className="fa-solid fa-play";
-            updRepUI(); renderTracks(); save();
+            const name=tracks[idx].t;
+            D.tinfo.textContent=name; D.mTrackName.textContent=name;
+            updStatus(); renderTracks(); save();
             if(auto) D.audio.play().catch(()=>{});
         }
 
@@ -788,9 +774,7 @@
                 S.results=Array.isArray(s.r)&&s.r.length?s.r:defaults;
                 S.allResults=[...S.results];
                 S.tid=Number.isInteger(s.t)?Math.min(Math.max(s.t,0),tracks.length-1):0;
-                S.repeatIdx=Number.isInteger(s.ri)?Math.min(Math.max(s.ri,0),CFG.REPEAT_OPTIONS.length-1):0;
-                S.repeat=CFG.REPEAT_OPTIONS[S.repeatIdx];
-                S.maxR=S.repeat; // reset current repeat counter
+                S.repeat=Number(s.rep)||0;
                 D.vol.value=String(Math.max(0,Math.min(100,Number(s.vol)||72)));
                 D.audio.volume=D.vol.value/100; D.vval.textContent=`${D.vol.value}%`;
                 S.npt=s.npt||null; S.query=s.qry||"";
@@ -800,7 +784,10 @@
                 D.tb.classList.toggle("active",S.theater);
                 D.tb.querySelector("i").className=S.theater?"fa-solid fa-compress":"fa-solid fa-expand";
                 updFsUI(); renderRes(); updPag();
-                selTrack(S.tid,false); updRepUI();
+                selTrack(S.tid,false); updStatus();
+                // Set repeat buttons
+                D.repOpts.forEach(o=>o.classList.toggle("active",parseInt(o.dataset.val)===S.repeat));
+                D.mRep.classList.toggle("active",S.repeat>0);
                 if(s.v) S.pending=s;
             }catch(e){console.error(e);S.results=defaults;S.allResults=[...defaults];renderRes();selTrack(S.tid,false);}
         }
@@ -833,52 +820,52 @@
                 S.player.seekTo(S.player.getDuration()*Math.max(0,Math.min(1,(e.clientX-r.left)/r.width)),true);
                 showOvl(); schedHide();
             });
+
+            // Desktop audio buttons
             D.ta.addEventListener("click",toggleAudio);
             D.prev.addEventListener("click",()=>selTrack((S.tid-1+tracks.length)%tracks.length,true));
             D.next.addEventListener("click",()=>selTrack((S.tid+1)%tracks.length,true));
             D.shuf.addEventListener("click",playRandom);
             D.sync.addEventListener("click",()=>{if(!S.vid)return toast("Pilih video dulu.");selTrack(S.tid,true);D.audio.currentTime=0;});
-            D.vol.addEventListener("input",()=>{D.audio.volume=D.vol.value/100;D.vval.textContent=`${D.vol.value}%`;save();});
-            
+
             // Repeat buttons
-            D.repBtns.forEach(btn=>{
-                btn.addEventListener("click",()=>{
-                    setRepeat(parseInt(btn.dataset.val));
-                });
+            D.repOpts.forEach(btn=>{
+                btn.addEventListener("click",()=>setRepeat(btn.dataset.val));
             });
 
-            D.audio.addEventListener("play",()=>{
-                D.tstat.textContent=S.repeat>0?`Ulang ${S.repeat}×`:"Sedang diputar";
-                D.mTrackStatus.textContent=S.repeat>0?`Ulang ${S.repeat}×`:"Diputar";
-                D.ta.querySelector("i").className="fa-solid fa-pause";
-                D.mPlay.querySelector("i").className="fa-solid fa-pause";
-                save();
-            });
-            D.audio.addEventListener("pause",()=>{
-                D.tstat.textContent="Dijeda"; D.mTrackStatus.textContent="Dijeda";
-                D.ta.querySelector("i").className="fa-solid fa-play";
-                D.mPlay.querySelector("i").className="fa-solid fa-play";
-                save();
-            });
+            D.vol.addEventListener("input",()=>{D.audio.volume=D.vol.value/100;D.vval.textContent=`${D.vol.value}%`;save();});
+
+            // Audio events - AUTO PLAY NEXT TRACK
+            D.audio.addEventListener("play",()=>{updStatus();save();});
+            D.audio.addEventListener("pause",()=>{updStatus();save();});
             D.audio.addEventListener("ended",()=>{
-                S.repeat++;
-                if(S.repeat < CFG.REPEAT_OPTIONS[S.repeatIdx]){
+                if(S.repeat > 1){
+                    // Repeat current track N-1 more times
+                    S.repeat--;
                     D.audio.currentTime=0; D.audio.play().catch(()=>{});
-                    D.tstat.textContent=`Ulang ${S.repeatIdx+1}× • Putaran ${S.repeat}/${S.maxR}`;
-                    D.mTrackStatus.textContent=`Ulang ${S.repeat}/${S.maxR}`;
-                    save(); return;
+                    toast(`Mengulang... sisa ${S.repeat}×`);
+                } else if(S.repeat === 1){
+                    S.repeat = 0;
+                    // Move to next track
+                    const nextIdx=(S.tid+1)%tracks.length;
+                    selTrack(nextIdx,true);
+                } else {
+                    // No repeat, move to next track
+                    const nextIdx=(S.tid+1)%tracks.length;
+                    selTrack(nextIdx,true);
                 }
-                D.tstat.textContent="Selesai"; D.mTrackStatus.textContent="Selesai";
-                D.ta.querySelector("i").className="fa-solid fa-play";
-                D.mPlay.querySelector("i").className="fa-solid fa-play";
-                S.repeat=0; save();
+                updStatus(); save();
             });
             D.audio.addEventListener("error",()=>{D.tstat.textContent="Error";toast("Gagal memuat audio.");});
 
+            // Search
             D.qBtn.addEventListener("click",()=>search());
             D.q.addEventListener("keydown",e=>{if(e.key==="Enter")search();});
             D.chips.forEach(b=>b.addEventListener("click",()=>{D.q.value=b.dataset.query;search();}));
+
+            // Murottal search filter
             let st; D.tsearch.addEventListener("input",e=>{clearTimeout(st);st=setTimeout(()=>filterTracks(e.target.value),180);});
+
             D.tb.addEventListener("click",toggleTh);
             D.fb.addEventListener("click",toggleFs);
             document.addEventListener("fullscreenchange",updFsUI);
@@ -891,6 +878,7 @@
                 if(k===" "){e.preventDefault();togglePlay();}
                 if(k==="escape"&&(S.fs||S.theater)){if(S.fs)toggleFs();if(S.theater)toggleTh();}
             });
+
             D.moreBtn.addEventListener("click",()=>{if(S.npt&&!S.loading)loadMore();});
             D.relRef.addEventListener("click",()=>{if(S.vid){toast("Memuat...");fetchRel(S.vid).then(renderRel);}});
 
@@ -899,10 +887,9 @@
             D.mPrev.addEventListener("click",()=>selTrack((S.tid-1+tracks.length)%tracks.length,true));
             D.mNext.addEventListener("click",()=>selTrack((S.tid+1)%tracks.length,true));
             D.mRep.addEventListener("click",()=>{
-                // Cycle through repeat options
-                const nextIdx = (S.repeatIdx + 1) % CFG.REPEAT_OPTIONS.length;
-                setRepeat(nextIdx);
-                toast(S.repeat > 0 ? `Pengulangan ${S.repeat}×` : "Pengulangan nonaktif");
+                const vals=[0,1,2,3,5,10];
+                const ci=vals.indexOf(S.repeat);
+                setRepeat(vals[(ci+1)%vals.length]);
             });
 
             window.addEventListener("beforeunload",save);
@@ -910,7 +897,7 @@
 
         function init(){
             restore(); setupEvents(); setupObs();
-            if(!D.tlist.children.length){renderTracks();selTrack(S.tid,false);D.audio.volume=D.vol.value/100;updRepUI();}
+            if(!D.tlist.children.length){renderTracks();selTrack(S.tid,false);D.audio.volume=D.vol.value/100;}
         }
         document.readyState==="loading"?document.addEventListener("DOMContentLoaded",init):init();
     </script>
