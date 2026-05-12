@@ -42,8 +42,10 @@
         .brand i { color: var(--accent); font-size: 28px; }
         .searchbar { display: grid; grid-template-columns: minmax(0, 1fr) 56px; gap: 10px; align-items: center; }
         .search-input { width: 100%; border: 1px solid #d8d8d1; background: #fff; border-radius: 999px; padding: 12px 16px; color: var(--text); }
-        .search-input:focus { outline: none; border-color: #8ab4f8; }
-        .search-button { border: 1px solid #d8d8d1; background: var(--surface-soft); border-radius: 999px; cursor: pointer; height: 46px; }
+        .search-input:focus { outline: none; border-color: #8ab4f8; box-shadow: 0 0 0 3px rgba(138, 180, 248, 0.15); }
+        .search-button { border: 1px solid #d8d8d1; background: var(--surface-soft); border-radius: 999px; cursor: pointer; height: 46px; transition: background 0.15s; }
+        .search-button:hover { background: var(--green-soft); }
+        .search-button:disabled { opacity: 0.5; cursor: not-allowed; }
 
         .page { max-width: 1380px; margin: 22px auto 40px; padding: 0 18px; display: grid; grid-template-columns: minmax(0, 1.55fr) 380px; gap: 24px; align-items: start; transition: grid-template-columns 0.3s ease; }
         .page.theater-mode { grid-template-columns: 1fr; max-width: 100%; padding: 0 24px; }
@@ -53,7 +55,8 @@
         .watch-column { min-width: 0; display: grid; gap: 16px; }
 
         .quick-chips { display: flex; flex-wrap: wrap; gap: 10px; }
-        .quick-chip { border: 1px solid var(--line); background: var(--surface); color: var(--text); border-radius: 999px; padding: 10px 14px; font-size: 13px; font-weight: 600; cursor: pointer; }
+        .quick-chip { border: 1px solid var(--line); background: var(--surface); color: var(--text); border-radius: 999px; padding: 10px 14px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+        .quick-chip:hover { background: var(--green-soft); border-color: var(--accent); }
 
         .player-wrap {
             background: #000; border-radius: 18px; overflow: hidden; aspect-ratio: 16 / 9;
@@ -63,16 +66,17 @@
         .player-wrap.visible { display: block; }
         .player-wrap.minimized {
             max-width: 340px; margin-left: auto; aspect-ratio: 16 / 9;
-            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
             position: fixed; bottom: 30px; right: 30px; border-radius: 12px; z-index: 50;
+            animation: slideUp 0.25s ease-out;
         }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .page.theater-mode .player-wrap.theater { border-radius: var(--radius) var(--radius) 0 0; box-shadow: none; margin: 0; width: 100%; max-width: 720px; margin-left: auto; margin-right: auto; }
         .player-wrap.controls-hidden .player-overlay { opacity: 0; }
 
         .player-wrap:fullscreen, .player-wrap:-webkit-full-screen, .player-wrap:-moz-full-screen, .player-wrap:-ms-fullscreen {
             width: 100vw; height: 100vh; border-radius: 0; margin: 0; display: block !important; position: fixed; top: 0; left: 0; z-index: 1000;
         }
-        .player-wrap:fullscreen #youtube-player, .player-wrap:-webkit-full-screen #youtube-player, .player-wrap:-moz-full-screen #youtube-player, .player-wrap:-ms-fullscreen #youtube-player { width: 100%; height: 100%; }
 
         #youtube-player { width: 100%; height: 100%; }
         .player-shield { position: absolute; inset: 0; z-index: 1; background: transparent; }
@@ -89,8 +93,7 @@
 
         .player-progress { display: grid; gap: 8px; width: 100%; max-width: calc(100% - 200px); }
         .player-controls { display: flex; flex-wrap: wrap; gap: 10px; flex-shrink: 0; }
-        .player-bottom i { color: var(--surface); }
-        .player-control-button { border: none; border-radius: 999px; padding: 10px 14px; background: rgba(255, 255, 255, 0.16); color: #fff; cursor: pointer; font-weight: 700; backdrop-filter: blur(8px); display: flex; align-items: center; gap: 6px; font-size: 13px; }
+        .player-control-button { border: none; border-radius: 999px; padding: 10px 14px; background: rgba(255, 255, 255, 0.16); color: #fff; cursor: pointer; font-weight: 700; backdrop-filter: blur(8px); display: flex; align-items: center; gap: 6px; font-size: 13px; transition: background 0.15s; }
         .player-control-button.primary { background: transparent; backdrop-filter: blur(20px); }
         .player-control-button:hover { background: rgba(255, 255, 255, 0.28); }
 
@@ -101,17 +104,17 @@
         .video-title { font-size: clamp(20px, 2.3vw, 26px); line-height: 1.35; font-weight: 700; letter-spacing: -0.02em; }
         .video-meta { display: flex; flex-wrap: wrap; gap: 10px; color: var(--muted); font-size: 14px; }
         .meta-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 999px; background: var(--surface-soft); color: var(--muted); font-weight: 600; }
-        .meta-badge.audio { background: var(--green-soft); color: var(--green); }
 
         .murottal-card, .results-card, .related-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow-soft); }
-        .progress-bar { height: 8px; border-radius: 999px; overflow: hidden; margin-bottom: 8px; cursor: pointer; position: relative; }
-        .progress-value { height: 100%; width: 0%; background: linear-gradient(315deg, #EF0F46, #EF889E); border-radius: 20px; position: relative; transition: width 0.1s linear; }
-        .progress-value:after { content: ""; position: absolute; width: 1000px; background: #ffffff50; height: 8px; border-radius: 4px; right: -1004px; }
-        .progress-text { color: #fff; font-size: 13px; text-wrap: nowrap; font-weight: 500; }
-
+        
         .card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
         .card-head h3 { font-size: 16px; }
         .card-head span { color: var(--muted); font-size: 13px; }
+        
+        .progress-bar { height: 8px; border-radius: 999px; overflow: hidden; margin-bottom: 8px; cursor: pointer; position: relative; background: rgba(255,255,255,0.2); }
+        .progress-value { height: 100%; width: 0%; background: linear-gradient(315deg, #EF0F46, #EF889E); border-radius: 20px; position: relative; transition: width 0.1s linear; }
+        .progress-text { color: #fff; font-size: 13px; text-wrap: nowrap; font-weight: 500; }
+
         .murottal-player { display: grid; gap: 14px; }
         .murottal-top { display: grid; grid-template-columns: 54px minmax(0, 1fr); gap: 12px; align-items: center; }
         .murottal-cover { width: 54px; height: 54px; border-radius: 999px; background: linear-gradient(135deg, #1a5f49, #b78a2e); color: #fff; display: grid; place-items: center; box-shadow: 0 12px 24px rgba(26, 95, 73, 0.18); font-size: 20px; }
@@ -119,29 +122,29 @@
         .murottal-now strong { display: block; font-size: 14px; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .murottal-now span { color: var(--muted); font-size: 12px; }
         .murottal-buttons { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; align-items: center; }
-        .icon-button, .tool-button { width: 100%; height: 44px; border-radius: 14px; border: none; cursor: pointer; color: var(--text); background: transparent; transition: background 0.2s ease; }
+        .icon-button, .tool-button { width: 100%; height: 44px; border-radius: 14px; border: none; cursor: pointer; color: var(--text); background: transparent; transition: background 0.15s ease; }
         .icon-button:hover, .tool-button:hover { background: var(--surface-soft); }
         .icon-button.primary-icon { background: linear-gradient(180deg, var(--accent), var(--accent-dark)); color: var(--surface); width: 50px; height: 50px; border-radius: 40px; display: grid; place-items: center; margin: 0 auto; box-shadow: var(--accent) 0px 10px 20px -10px; transition: transform 0.2s ease, box-shadow 0.2s ease; }
         .icon-button.primary-icon:hover { transform: scale(1.05); box-shadow: var(--accent) 0px 14px 28px -10px; }
-        .icon-button.primary-icon:active { transform: scale(0.98); }
+        
         .murottal-search { margin: 20px 0; position: relative; }
-        .murottal-search input { width: 100%; border: 1px solid var(--line); background: var(--surface-soft); border-radius: 12px; padding: 10px 14px 10px 36px; color: var(--text); font-size: 13px; transition: border-color 0.2s ease; }
-        .murottal-search input:focus { outline: none; border-color: var(--accent); }
-        .murottal-search i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 12px; }
+        .murottal-search input { width: 100%; border: 1px solid var(--line); background: var(--surface-soft); border-radius: 12px; padding: 10px 14px 10px 36px; color: var(--text); font-size: 13px; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+        .murottal-search input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(29, 93, 71, 0.1); }
+        .murottal-search i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 12px; pointer-events: none; }
+        
         .track-list { display: grid; gap: 10px; margin: 12px 0 0; max-height: 340px; overflow-y: auto; padding-right: 4px; }
         .track-list::-webkit-scrollbar { width: 6px; }
         .track-list::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
-        .track-list::-webkit-scrollbar-track { background: transparent; }
-        .track-item { width: 100%; text-align: left; border: 1px solid var(--line); background: #fff; border-radius: 14px; padding: 12px 14px; cursor: pointer; transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.1s ease; }
+        .track-item { width: 100%; text-align: left; border: 1px solid var(--line); background: #fff; border-radius: 14px; padding: 12px 14px; cursor: pointer; transition: border-color 0.18s ease, transform 0.1s ease; }
         .track-item:hover { transform: translateX(2px); border-color: var(--accent); }
         .track-item.active { border-color: #98c8b8; background: var(--green-soft); box-shadow: 0 10px 24px rgba(17, 97, 73, 0.12); }
         .track-item strong { display: block; font-size: 14px; margin-bottom: 3px; }
         .track-item span { font-size: 12px; color: var(--muted); }
-        .track-item.no-results { text-align: center; padding: 20px; color: var(--muted); cursor: default; }
+        .track-item.no-results { text-align: center; padding: 20px; color: var(--muted); cursor: default; border: none; background: transparent; }
 
-        .volume-wrap { display: grid; gap: 6px; }
+        .repeat-section { margin-top: 16px; }
         .repeat-controls { display: flex; align-items: center; gap: 10px; background: var(--surface-soft); border-radius: 12px; padding: 8px; border: 1px solid var(--line); }
-        .repeat-btn { width: 32px; height: 32px; border-radius: 8px; border: none; background: #fff; color: var(--text); cursor: pointer; display: grid; place-items: center; font-weight: 600; transition: background 0.2s ease, transform 0.1s ease; }
+        .repeat-btn { width: 32px; height: 32px; border-radius: 8px; border: none; background: #fff; color: var(--text); cursor: pointer; display: grid; place-items: center; font-weight: 600; transition: background 0.15s ease, transform 0.1s ease; }
         .repeat-btn:hover { background: var(--green-soft); color: var(--green); }
         .repeat-btn:active { transform: scale(0.95); }
         .repeat-display { flex: 1; text-align: center; font-weight: 700; color: var(--accent); font-size: 15px; display: flex; align-items: center; justify-content: center; gap: 4px; }
@@ -149,29 +152,29 @@
         .repeat-status { color: var(--muted); font-size: 12px; margin-top: 6px; line-height: 1.5; display: flex; align-items: center; gap: 6px; }
         .repeat-progress { flex: 1; height: 4px; background: var(--line); border-radius: 2px; overflow: hidden; }
         .repeat-progress-bar { height: 100%; background: linear-gradient(90deg, var(--green), var(--accent)); border-radius: 2px; transition: width 0.3s ease; }
-        .volume-wrap label { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+        .volume-wrap { margin-top: 16px; }
         .volume-slider { display: flex; align-items: center; gap: 10px; }
         input[type="range"] { width: 100%; accent-color: var(--green); cursor: pointer; }
 
         .sidebar { min-width: 0; display: grid; gap: 16px; position: sticky; top: 84px; align-self: start; transition: opacity 0.3s ease; }
         .results { display: grid; gap: 12px; }
-        .result-item { display: grid; grid-template-columns: 168px minmax(0, 1fr); gap: 10px; background: #fff; border-radius: 14px; cursor: pointer; padding: 8px; border: 1px solid transparent; transition: border-color 0.18s ease, box-shadow 0.18s ease; }
+        .result-item { display: grid; grid-template-columns: 168px minmax(0, 1fr); gap: 10px; background: #fff; border-radius: 14px; cursor: pointer; padding: 8px; border: 1px solid transparent; transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.1s ease; }
+        .result-item:hover { border-color: var(--line); box-shadow: var(--shadow-soft); transform: translateY(-1px); }
         .result-item.active .result-thumb, .result-item:hover .result-thumb { outline: 2px solid var(--accent); }
-        .result-item:hover, .result-item.active { border-color: var(--line); box-shadow: var(--shadow-soft); }
         .result-thumb { position: relative; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: #000; outline: 2px solid transparent; transition: outline-color 0.2s ease; }
         .result-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .duration { position: absolute; right: 8px; bottom: 8px; background: rgba(0, 0, 0, 0.8); color: #fff; border-radius: 6px; padding: 3px 6px; font-size: 11px; font-weight: 700; }
         .result-body { min-width: 0; padding: 2px 0; }
         .result-body strong { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; font-size: 15px; line-height: 1.4; margin-bottom: 6px; }
         .result-body p { color: var(--muted); font-size: 12px; line-height: 1.5; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
-        .empty { padding: 14px; border-radius: 14px; background: var(--surface-soft); color: var(--muted); font-size: 14px; }
+        .empty { padding: 14px; border-radius: 14px; background: var(--surface-soft); color: var(--muted); font-size: 14px; text-align: center; }
 
         .loading-more { text-align: center; padding: 16px; color: var(--muted); display: none; }
         .loading-more.active { display: block; }
         .loading-more i { animation: spin 1s linear infinite; margin-right: 8px; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .load-more-btn { width: 100%; padding: 12px; margin-top: 10px; border: 1px solid var(--line); background: var(--surface-soft); border-radius: 12px; color: var(--text); font-weight: 600; cursor: pointer; transition: background 0.2s ease; }
-        .load-more-btn:hover { background: var(--green-soft); border-color: var(--accent); }
+        .load-more-btn { width: 100%; padding: 12px; margin-top: 10px; border: 1px solid var(--line); background: var(--surface-soft); border-radius: 12px; color: var(--text); font-weight: 600; cursor: pointer; transition: background 0.15s ease; }
+        .load-more-btn:hover:not(:disabled) { background: var(--green-soft); border-color: var(--accent); }
         .load-more-btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .pagination-info { text-align: center; color: var(--muted); font-size: 12px; margin-top: 6px; min-height: 18px; }
 
@@ -188,50 +191,24 @@
         .toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%) translateY(10px); background: rgba(15, 15, 15, 0.95); color: #fff; padding: 12px 16px; border-radius: 999px; font-size: 13px; opacity: 0; pointer-events: none; transition: opacity 0.2s ease, transform 0.2s ease; z-index: 100; }
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-        .theater-btn.active i::before { content: "\f066"; }
-        .fullscreen-btn.active i::before { content: "\f066"; }
+        .player-expand-btn {
+            position: absolute; top: 0; right: 0; z-index: 6; width: 100%; height: 100%;
+            border-radius: 10px; border: none; background: transparent; color: #fff; cursor: pointer;
+            display: none; align-items: center; justify-content: center; font-size: 24px;
+            transition: background 0.2s, opacity 0.2s; opacity: 0;
+        }
+        .player-wrap.minimized .player-expand-btn { display: flex; }
+        .player-expand-btn:hover { background: rgba(0,0,0,0.5); opacity: 1; }
 
-        /* ✅ PURE CSS HOVER CONTROLS */
+        .player-wrap.minimized .player-shield { pointer-events: auto !important; z-index: 3; }
+        .player-wrap.minimized .player-overlay { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
+        .player-wrap.minimized .player-overlay.hidden { display: flex !important; opacity: 1 !important; }
+        .player-wrap.minimized .player-bottom { opacity: 0; pointer-events: none !important; transition: opacity 0.2s ease; }
+
         .player-wrap:hover .player-overlay { opacity: 1 !important; visibility: visible !important; }
         .player-wrap:hover .player-bottom { pointer-events: auto !important; }
         .player-wrap.controls-hidden .player-overlay { opacity: 0; visibility: hidden; }
         .player-wrap:hover.controls-hidden .player-overlay { opacity: 1 !important; visibility: visible !important; }
-
-        /* ✅ TOMBOL EXPAND & OVERLAY MINIMIZED */
-        .player-expand-btn {
-            position: absolute;
-            top: 0;
-            right: 0;
-            z-index: 6;
-            width: 100%;
-            height: 100%;
-            border-radius: 10px;
-            border: none;
-            background: #ffffff00;
-            color: #fff;
-            cursor: pointer;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            transition: background 0.2s;
-            opacity: 0;
-        }
-        .player-wrap.minimized .player-expand-btn { display: flex; }
-        .player-expand-btn:hover { background: rgba(0,0,0,0.5); opacity: 1;}
-
-        /* 🛡️ Overlay tetap aktif saat minimized untuk blokir iframe YouTube */
-        .player-wrap.minimized .player-shield { pointer-events: auto !important; z-index: 3; }
-        .player-wrap.minimized .player-overlay { 
-            opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; 
-        }
-        .player-wrap.minimized .player-overlay.hidden { display: flex !important; opacity: 1 !important; }
-        .player-wrap.minimized .player-bottom { 
-            opacity: 0; pointer-events: none !important; 
-            transition: opacity 0.2s ease;
-        }
-        /* Shield tetap transparan tapi menangkap klik */
-        .player-wrap.minimized .player-shield { background: transparent; }
 
         @media (max-width: 1100px) { .page { grid-template-columns: 1fr; } }
         @media (max-width: 760px) {
@@ -246,8 +223,7 @@
             .icon-button, .tool-button { height: 40px; }
             .icon-button.primary-icon { width: 44px; height: 44px; }
             .page.theater-mode .player-wrap.theater { max-width: 100%; margin: 0; }
-            .page.theater-mode .video-info.visible,
-            .page.theater-mode .sidebar { max-width: 100%; padding: 0 4px; }
+            .page.theater-mode .video-info.visible, .page.theater-mode .sidebar { max-width: 100%; padding: 0 4px; }
             .related-item { grid-template-columns: 100px minmax(0, 1fr); }
             .player-expand-btn { width: 30px; height: 30px; top: 8px; right: 8px; font-size: 12px; }
         }
@@ -332,9 +308,8 @@
                     </div>
                 </div>
                 <div class="murottal-search"><i class="fa-solid fa-magnifying-glass"></i><input id="murottal-search" type="text" placeholder="Cari surat atau qari..."></div>
-                
                 <div id="track-list" class="track-list"></div>
-                <div class="repeat-section" style="margin-top: 16px;">
+                <div class="repeat-section">
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
                         <span style="font-size: 13px; font-weight: 600; color: var(--text);"><i class="fa-solid fa-repeat" style="color: var(--green); margin-right: 6px;"></i>Pengulangan</span>
                     </div>
@@ -348,7 +323,7 @@
                         <div class="repeat-progress"><div id="repeat-progress-bar" class="repeat-progress-bar" style="width: 33%"></div></div>
                     </div>
                 </div>
-                <div class="volume-wrap" style="margin-top: 16px;">
+                <div class="volume-wrap">
                     <label for="audio-volume" class="volume-slider"><i class="fa-solid fa-volume-high"></i><input id="audio-volume" type="range" min="0" max="100" value="72"><span id="volume-value" style="font-size: 12px; color: var(--muted); min-width: 32px; text-align: right;">72%</span></label>
                 </div>
             </div>
@@ -359,85 +334,116 @@
     <div id="toast" class="toast"></div>
 
     <script src="https://www.youtube.com/iframe_api"></script>
-    
     <script>
-        const YOUTUBE_API_KEY = "AIzaSyBG0R-WYVBo_N5CqVka1ZuaMW12MJMWGCI";
-        const STORAGE_KEY = "youtube-murottal-player-state-v1";
-        const ITEMS_PER_PAGE = 10;
-        const ITEMS_PER_SCROLL = 5;
-        const MAX_INLINE_ITEMS = 30;
-        const SCROLL_THRESHOLD = 200;
-        
+        // === CONFIGURATION ===
+        const CONFIG = {
+            API_KEY: "AIzaSyBG0R-WYVBo_N5CqVka1ZuaMW12MJMWGCI",
+            STORAGE_KEY: "murottal-v2",
+            ITEMS_PER_PAGE: 10,
+            ITEMS_PER_SCROLL: 5,
+            MAX_INLINE_ITEMS: 30,
+            SCROLL_THRESHOLD: 250,
+            SAVE_DELAY: 800,
+            TOAST_DURATION: 2200
+        };
+
+        // === STATE OBJECT ===
+        const state = {
+            player: null,
+            searchResults: [],
+            allResults: [],
+            selectedVideoId: null,
+            trackIndex: 0,
+            progressFrame: null,
+            currentRepeat: 0,
+            maxRepeat: 3,
+            pendingRestore: null,
+            overlayTimer: null,
+            filteredTracks: null,
+            isTheater: false,
+            isFullscreen: false,
+            nextPageToken: null,
+            query: "",
+            isLoading: false,
+            hasMore: true,
+            transitioning: false,
+            durationCache: new Map(),
+            saveTimer: null,
+            observer: null
+        };
+
+        // === AUDIO DATA ===
         const audioTracks = [
-            { id: 1, title: "Surah Al-Fatihah", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/001.mp3" },
-            { id: 2, title: "Surah Al-Baqarah", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/002.mp3" },
-            { id: 3, title: "Surah Ali Imran", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/003.mp3" },
-            { id: 4, title: "Surah An-Nisa'", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/004.mp3" },
-            { id: 5, title: "Surah Al-Maidah", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/005.mp3" },
-            { id: 6, title: "Surah Al-An'am", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/006.mp3" },
-            { id: 7, title: "Surah Al-A'raf", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/007.mp3" },
-            { id: 8, title: "Surah Al-Anfal", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/008.mp3" },
-            { id: 9, title: "Surah At-Taubah", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/009.mp3" },
-            { id: 10, title: "Surah Yunus", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/010.mp3" },
-            { id: 11, title: "Surah Hud", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/011.mp3" },
-            { id: 12, title: "Surah Yusuf", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/012.mp3" },
-            { id: 13, title: "Surah Ar-Ra'd", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/013.mp3" },
-            { id: 14, title: "Surah Ibrahim", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/014.mp3" },
-            { id: 15, title: "Surah Al-Hijr", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/015.mp3" },
-            { id: 16, title: "Surah An-Nahl", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/016.mp3" },
-            { id: 17, title: "Surah Al-Isra'", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/017.mp3" },
-            { id: 18, title: "Surah Al-Kahf", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/018.mp3" },
-            { id: 19, title: "Surah Maryam", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/019.mp3" },
-            { id: 20, title: "Surah Thaha", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/020.mp3" },
-            { id: 21, title: "Surah Al-Anbiya", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/021.mp3" },
-            { id: 22, title: "Surah Al-Hajj", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/022.mp3" },
-            { id: 23, title: "Surah Al-Mu'minun", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/023.mp3" },
-            { id: 24, title: "Surah An-Nur", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/024.mp3" },
-            { id: 25, title: "Surah Al-Furqan", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/025.mp3" },
-            { id: 26, title: "Surah Ash-Shuara'", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/026.mp3" },
-            { id: 27, title: "Surah An-Naml", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/027.mp3" },
-            { id: 28, title: "Surah Al-Qasash", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/028.mp3" },
-            { id: 29, title: "Surah Al-'Ankabut", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/029.mp3" },
-            { id: 30, title: "Surah Ar-Rum", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/030.mp3" },
-            { id: 31, title: "Surah Luqman", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/031.mp3" },
-            { id: 32, title: "Surah As-Sajdah", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/032.mp3" },
-            { id: 33, title: "Surah Al-Ahzab", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/033.mp3" },
-            { id: 34, title: "Surah Saba'", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/034.mp3" },
-            { id: 35, title: "Surah Fatir", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/035.mp3" },
-            { id: 36, title: "Surah YaSin", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/036.mp3" },
-            { id: 37, title: "Surah As-Saffat", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/037.mp3" },
-            { id: 38, title: "Surah Sad", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/038.mp3" },
-            { id: 39, title: "Surah Az-Zumar", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/039.mp3" },
-            { id: 40, title: "Surah Ghafir", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/040.mp3" },
-            { id: 41, title: "Surah Fussilat", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/041.mp3" },
-            { id: 42, title: "Surah Asy-Syura", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/042.mp3" },
-            { id: 43, title: "Surah Az-Zukhruf", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/043.mp3" },
-            { id: 44, title: "Surah Ad-Dukhan", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/044.mp3" },
-            { id: 45, title: "Surah Al-Jatsiyah", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/045.mp3" },
-            { id: 46, title: "Surah Al-Ahqaf", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/046.mp3" },
-            { id: 47, title: "Surah Muhammad", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/047.mp3" },
-            { id: 48, title: "Surah Al-Fath", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/048.mp3" },
-            { id: 49, title: "Surah Al-Hujurat", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/049.mp3" },
-            { id: 50, title: "Surah Qaf", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/050.mp3" },
-            { id: 51, title: "Surah Adz-Dzariyat", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/051.mp3" },
-            { id: 52, title: "Surah At-Tur", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/052.mp3" },
-            { id: 53, title: "Surah An-Najm", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/053.mp3" },
-            { id: 54, title: "Surah Al-Qamar", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/054.mp3" },
-            { id: 55, title: "Surah Ar-Rahman", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/055.mp3" },
-            { id: 56, title: "Surah Al-Waqi'ah", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/056.mp3" },
-            { id: 57, title: "Surah Al-Hadid", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/057.mp3" },
-            { id: 58, title: "Surah Al-Mujadilah", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/058.mp3" },
-            { id: 59, title: "Surah Al-Hasyr", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/059.mp3" },
-            { id: 60, title: "Surah Al-Mumtahanah", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/060.mp3" },
-            { id: 61, title: "Surah As-Shaf", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/061.mp3" },
-            { id: 62, title: "Surah Al-Jumu'ah", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/062.mp3" },
-            { id: 63, title: "Surah Al-Munafiqun", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/063.mp3" },
-            { id: 64, title: "Surah At-Taghabun", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/064.mp3" },
-            { id: 65, title: "Surah At-Talaq", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/065.mp3" },
-            { id: 66, title: "Surah At-Tahrim", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/066.mp3" },
-            { id: 67, title: "Surah Al-Mulk", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/067.mp3" },
-            { id: 68, title: "Surah Al-Qalam", reciter: "Mishary Raashid Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/068.mp3" },
+            { id: 1, title: "Al-Fatihah", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/001.mp3" },
+            { id: 2, title: "Al-Baqarah", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/002.mp3" },
+            { id: 3, title: "Ali Imran", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/003.mp3" },
+            { id: 4, title: "An-Nisa'", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/004.mp3" },
+            { id: 5, title: "Al-Maidah", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/005.mp3" },
+            { id: 6, title: "Al-An'am", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/006.mp3" },
+            { id: 7, title: "Al-A'raf", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/007.mp3" },
+            { id: 8, title: "Al-Anfal", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/008.mp3" },
+            { id: 9, title: "At-Taubah", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/009.mp3" },
+            { id: 10, title: "Yunus", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/010.mp3" },
+            { id: 11, title: "Hud", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/011.mp3" },
+            { id: 12, title: "Yusuf", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/012.mp3" },
+            { id: 13, title: "Ar-Ra'd", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/013.mp3" },
+            { id: 14, title: "Ibrahim", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/014.mp3" },
+            { id: 15, title: "Al-Hijr", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/015.mp3" },
+            { id: 16, title: "An-Nahl", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/016.mp3" },
+            { id: 17, title: "Al-Isra'", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/017.mp3" },
+            { id: 18, title: "Al-Kahf", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/018.mp3" },
+            { id: 19, title: "Maryam", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/019.mp3" },
+            { id: 20, title: "Thaha", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/020.mp3" },
+            { id: 21, title: "Al-Anbiya", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/021.mp3" },
+            { id: 22, title: "Al-Hajj", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/022.mp3" },
+            { id: 23, title: "Al-Mu'minun", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/023.mp3" },
+            { id: 24, title: "An-Nur", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/024.mp3" },
+            { id: 25, title: "Al-Furqan", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/025.mp3" },
+            { id: 26, title: "Ash-Shuara'", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/026.mp3" },
+            { id: 27, title: "An-Naml", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/027.mp3" },
+            { id: 28, title: "Al-Qasash", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/028.mp3" },
+            { id: 29, title: "Al-'Ankabut", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/029.mp3" },
+            { id: 30, title: "Ar-Rum", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/030.mp3" },
+            { id: 31, title: "Luqman", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/031.mp3" },
+            { id: 32, title: "As-Sajdah", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/032.mp3" },
+            { id: 33, title: "Al-Ahzab", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/033.mp3" },
+            { id: 34, title: "Saba'", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/034.mp3" },
+            { id: 35, title: "Fatir", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/035.mp3" },
+            { id: 36, title: "YaSin", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/036.mp3" },
+            { id: 37, title: "As-Saffat", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/037.mp3" },
+            { id: 38, title: "Sad", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/038.mp3" },
+            { id: 39, title: "Az-Zumar", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/039.mp3" },
+            { id: 40, title: "Ghafir", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/040.mp3" },
+            { id: 41, title: "Fussilat", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/041.mp3" },
+            { id: 42, title: "Asy-Syura", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/042.mp3" },
+            { id: 43, title: "Az-Zukhruf", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/043.mp3" },
+            { id: 44, title: "Ad-Dukhan", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/044.mp3" },
+            { id: 45, title: "Al-Jatsiyah", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/045.mp3" },
+            { id: 46, title: "Al-Ahqaf", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/046.mp3" },
+            { id: 47, title: "Muhammad", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/047.mp3" },
+            { id: 48, title: "Al-Fath", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/048.mp3" },
+            { id: 49, title: "Al-Hujurat", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/049.mp3" },
+            { id: 50, title: "Qaf", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/050.mp3" },
+            { id: 51, title: "Adz-Dzariyat", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/051.mp3" },
+            { id: 52, title: "At-Tur", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/052.mp3" },
+            { id: 53, title: "An-Najm", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/053.mp3" },
+            { id: 54, title: "Al-Qamar", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/054.mp3" },
+            { id: 55, title: "Ar-Rahman", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/055.mp3" },
+            { id: 56, title: "Al-Waqi'ah", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/056.mp3" },
+            { id: 57, title: "Al-Hadid", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/057.mp3" },
+            { id: 58, title: "Al-Mujadilah", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/058.mp3" },
+            { id: 59, title: "Al-Hasyr", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/059.mp3" },
+            { id: 60, title: "Al-Mumtahanah", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/060.mp3" },
+            { id: 61, title: "As-Shaf", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/061.mp3" },
+            { id: 62, title: "Al-Jumu'ah", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/062.mp3" },
+            { id: 63, title: "Al-Munafiqun", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/063.mp3" },
+            { id: 64, title: "At-Taghabun", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/064.mp3" },
+            { id: 65, title: "At-Talaq", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/065.mp3" },
+            { id: 66, title: "At-Tahrim", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/066.mp3" },
+            { id: 67, title: "Al-Mulk", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/067.mp3" },
+            { id: 68, title: "Al-Qalam", reciter: "Mishary Al-Afasy", file: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/068.mp3" }
         ];
+        state.filteredTracks = [...audioTracks];
 
         const defaultSuggestions = [
             { id: "27VG6RlDnu8", title: "Cerita Imam: Berani Jujur", channelTitle: "Nussa Official", description: "Animasi anak muslim dengan pesan akhlak yang ringan dan hangat untuk ditonton sebagai visual.", thumbnail: "https://i.ytimg.com/vi/27VG6RlDnu8/hqdefault.jpg", durationLabel: "--:--" },
@@ -446,364 +452,652 @@
             { id: "lGind6Cn0Tw", title: "I Am The Best Muslim", channelTitle: "FreeQuranEducation", description: "Serial islami anak dengan visual ramah keluarga untuk halaman beranda awal.", thumbnail: "https://i.ytimg.com/vi/lGind6Cn0Tw/hqdefault.jpg", durationLabel: "--:--" }
         ];
 
-        let player = null;
-        let searchResults = [];
-        let allSearchResults = [];
-        let selectedVideoId = null;
-        let selectedTrackIndex = 0;
-        let progressFrame = null;
-        let currentRepeat = 0;
-        let maxRepeat = 3;
-        let pendingRestoreState = null;
-        let overlayHideTimer = null;
-        let filteredTracks = [...audioTracks];
-        let isTheaterMode = false;
-        let isFullscreen = false;
-        let currentPage = 1;
-        let nextPageToken = null;
-        let currentSearchQuery = "";
-        let isLoadingMore = false;
-        let hasMoreResults = true;
-        let isVideoTransitioning = false;
+        // === DOM REFERENCES ===
+        const $ = id => document.getElementById(id);
+        const dom = {
+            searchInput: $("search-query"), searchBtn: $("search-button"),
+            results: $("results"), resultsCount: $("results-count"), resultsCard: $(".results-card"),
+            playerWrap: $("player-wrap"), overlay: $("player-overlay"), shield: $("player-shield"),
+            expandBtn: $("player-expand-btn"),
+            toggleVideo: $("toggle-video"), progressBar: $("progress-bar"),
+            progressValue: $("progress-value"), timeDisplay: $("time-display"),
+            title: $("current-title"), meta: $("current-meta"),
+            videoInfo: $(".video-info"),
+            mainPage: $("main-page"), loading: $("loading-more"),
+            loadMoreBtn: $("load-more-btn"), pageInfo: $("pagination-info"),
+            relatedSection: $("related-section"), relatedList: $("related-list"),
+            refreshRelated: $("refresh-related"),
+            trackList: $("track-list"), audio: $("murottal-audio"),
+            trackInfo: $("selected-track-info"), status: $("audio-mini-status"),
+            toggleAudio: $("toggle-audio"), prev: $("prev-track"), next: $("next-track"),
+            shuffle: $("shuffle-track"), syncBtn: $("sync-audio-side"),
+            repeatDec: $("repeat-decrease"), repeatInc: $("repeat-increase"),
+            repeatCount: $("repeat-count-display"), repeatText: $("repeat-text"),
+            repeatBar: $("repeat-progress-bar"),
+            volume: $("audio-volume"), volVal: $("volume-value"),
+            trackSearch: $("murottal-search"),
+            theaterBtn: $("theater-btn"), fullscreenBtn: $("fullscreen-btn"),
+            toast: $("toast"), chips: document.querySelectorAll(".quick-chip")
+        };
 
-        
-        const searchQueryInput = document.getElementById("search-query");
-        const searchButton = document.getElementById("search-button");
-        const resultsContainer = document.getElementById("results");
-        const currentTitle = document.getElementById("current-title");
-        const currentMeta = document.getElementById("current-meta");
-        const toggleVideoButton = document.getElementById("toggle-video");
-        const progressValue = document.getElementById("progress-value");
-        const progressBar = document.getElementById("progress-bar");
-        const timeDisplay = document.getElementById("time-display");
-        const playerWrap = document.getElementById("player-wrap");
-        const playerShield = document.getElementById("player-shield");
-        const playerOverlay = document.getElementById("player-overlay");
-        const playerExpandBtn = document.getElementById("player-expand-btn");
-        const videoInfo = document.querySelector(".video-info");
-        const resultsCard = document.querySelector(".results-card");
-        const trackList = document.getElementById("track-list");
-        const audioElement = document.getElementById("murottal-audio");
-        const selectedTrackInfo = document.getElementById("selected-track-info");
-        const audioMiniStatus = document.getElementById("audio-mini-status");
-        const toggleAudioButton = document.getElementById("toggle-audio");
-        const shuffleTrackButton = document.getElementById("shuffle-track");
-        const syncAudioSideButton = document.getElementById("sync-audio-side");
-        const repeatCountDisplay = document.getElementById("repeat-count-display");
-        const repeatText = document.getElementById("repeat-text");
-        const repeatProgressBar = document.getElementById("repeat-progress-bar");
-        const repeatDecreaseBtn = document.getElementById("repeat-decrease");
-        const repeatIncreaseBtn = document.getElementById("repeat-increase");
-        const audioVolume = document.getElementById("audio-volume");
-        const volumeValue = document.getElementById("volume-value");
-        const toast = document.getElementById("toast");
-        const quickChipButtons = document.querySelectorAll(".quick-chip");
-        const murottalSearchInput = document.getElementById("murottal-search");
-        const theaterBtn = document.getElementById("theater-btn");
-        const fullscreenBtn = document.getElementById("fullscreen-btn");
-        const mainPage = document.getElementById("main-page");
-        const resultsCount = document.getElementById("results-count");
-        const loadingMore = document.getElementById("loading-more");
-        const loadMoreBtn = document.getElementById("load-more-btn");
-        const paginationInfo = document.getElementById("pagination-info");
-        const relatedSection = document.getElementById("related-section");
-        const relatedList = document.getElementById("related-list");
-        const refreshRelatedBtn = document.getElementById("refresh-related");
+        // === UTILITY FUNCTIONS ===
+        const escapeHtml = t => {
+            const d = document.createElement("div");
+            d.textContent = t;
+            return d.innerHTML;
+        };
 
+        const fmt = s => {
+            const m = Math.floor(s / 60), sec = Math.floor(s % 60);
+            return `${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+        };
+
+        const isoToClock = d => {
+            const m = d?.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+            if (!m) return "--:--";
+            const [h = "00", min = "00", sec = "00"] = [m[1] || "0", m[2] || "0", m[3] || "0"].map(v => String(v).padStart(2, "0"));
+            return m[1] ? `${h}:${min}:${sec}` : `${min}:${sec}`;
+        };
+
+        let toastTimer;
+        const showToast = msg => {
+            dom.toast.textContent = msg;
+            dom.toast.classList.add("show");
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => dom.toast.classList.remove("show"), CONFIG.TOAST_DURATION);
+        };
+
+        // === THROTTLED SAVE ===
+        const saveState = () => {
+            if (state.saveTimer) return;
+            state.saveTimer = setTimeout(() => {
+                try {
+                    localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify({
+                        q: dom.searchInput.value.trim(), results: state.searchResults.slice(0, CONFIG.ITEMS_PER_PAGE),
+                        vid: state.selectedVideoId, tid: state.trackIndex, maxR: state.maxRepeat, curR: state.currentRepeat,
+                        vol: Number(dom.volume.value), visible: dom.playerWrap.classList.contains("visible"),
+                        mini: dom.playerWrap.classList.contains("minimized"),
+                        time: state.player?.getCurrentTime?.() || 0, playing: state.player?.getPlayerState?.() === YT.PlayerState.PLAYING,
+                        theater: state.isTheater, fs: state.isFullscreen,
+                        npt: state.nextPageToken, query: state.query
+                    }));
+                } catch (e) { console.warn(e); }
+                state.saveTimer = null;
+            }, CONFIG.SAVE_DELAY);
+        };
+
+        // === YOUTUBE PLAYER ===
         function onYouTubeIframeAPIReady() {
-            player = new YT.Player("youtube-player", {
+            state.player = new YT.Player("youtube-player", {
                 host: "https://www.youtube-nocookie.com", videoId: "",
                 playerVars: { autoplay: 0, controls: 0, fs: 0, disablekb: 1, iv_load_policy: 3, rel: 0, modestbranding: 1, playsinline: 1 },
-                events: { onReady: handlePlayerReady, onStateChange: handlePlayerStateChange }
+                events: { onReady: onReady, onStateChange: onStateChange }
             });
         }
 
-        function handlePlayerReady() {
-            player.mute(); player.setVolume(0); updateTimeDisplay();
-            if (pendingRestoreState) { restoreVideoState(pendingRestoreState); pendingRestoreState = null; }
-        }
-
-        function handlePlayerStateChange(event) {
-            if (!player) return;
-            player.mute(); player.setVolume(0);
-            if (event.data === YT.PlayerState.PLAYING) {
-                isVideoTransitioning = false;
-                startAudioWithVideo(); startProgressLoop(); schedulePlayerControlsHide();
-            } else if (event.data === YT.PlayerState.PAUSED) {
-                stopProgressLoop(); setPlayerControlsVisible(true);
-                if (!isVideoTransitioning) pauseAudioWithVideo();
-            } else if (event.data === YT.PlayerState.ENDED) {
-                stopProgressLoop(); setPlayerControlsVisible(true);
-                if (searchResults.length > 0 && selectedVideoId) {
-                    const idx = searchResults.findIndex(item => item.id === selectedVideoId);
-                    if (idx >= 0 && idx < searchResults.length - 1) {
-                        const next = searchResults[idx + 1];
-                        loadVideo(next, { autoplay: true, preserveAudio: true });
-                        showToast(`Berikutnya: ${next.title}`);
-                    } else { pauseAudioWithVideo(); }
-                } else { pauseAudioWithVideo(); }
+        function onReady() {
+            state.player.mute(); state.player.setVolume(0);
+            updateDisplay();
+            if (state.pendingRestore) {
+                restoreVideoState(state.pendingRestore);
+                state.pendingRestore = null;
             }
-            saveAppState();
         }
 
-        function startAudioWithVideo() {
-            if (!audioElement.src) selectTrack(selectedTrackIndex, false);
-            if (audioElement.paused) audioElement.play().catch(() => {});
-        }
-        function pauseAudioWithVideo() { if (!audioElement.paused) audioElement.pause(); }
-        function startProgressLoop() { stopProgressLoop(); const tick = () => { updateTimeDisplay(); progressFrame = requestAnimationFrame(tick); }; tick(); }
-        function stopProgressLoop() { if (progressFrame) { cancelAnimationFrame(progressFrame); progressFrame = null; } updateTimeDisplay(); }
-        function updateTimeDisplay() {
-            if (!player?.getCurrentTime) { timeDisplay.textContent = "00:00 / 00:00"; progressValue.style.width = "0%"; return; }
-            const cur = player.getCurrentTime() || 0, dur = player.getDuration() || 0;
-            timeDisplay.textContent = `${fmt(cur)} / ${fmt(dur)}`;
-            progressValue.style.width = dur ? `${(cur / dur) * 100}%` : "0%";
-        }
-        function fmt(s) { const m = Math.floor(s / 60), sec = Math.floor(s % 60); return `${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`; }
-
-        function showToast(msg) { toast.textContent = msg; toast.classList.add("show"); clearTimeout(showToast.timer); showToast.timer = setTimeout(() => toast.classList.remove("show"), 2400); }
-        function escapeHtml(t) { const m = { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#039;" }; return String(t).replace(/[&<>"']/g, c => m[c]); }
-
-        function setPlayerControlsVisible(v) { if (!playerWrap.classList.contains("visible")) return; playerWrap.classList.toggle("controls-hidden", !v); }
-        function schedulePlayerControlsHide(d = 1200) { clearTimeout(overlayHideTimer); overlayHideTimer = setTimeout(() => setPlayerControlsVisible(false), d); }
-
-        function saveAppState() {
-            try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify({
-                    searchQuery: searchQueryInput.value.trim(), searchResults: searchResults.slice(0, ITEMS_PER_PAGE),
-                    selectedVideoId, selectedTrackIndex, maxRepeat, currentRepeat,
-                    volumeValue: Number(audioVolume.value), playerVisible: playerWrap.classList.contains("visible"),
-                    playerMinimized: playerWrap.classList.contains("minimized"),
-                    currentVideoTime: player?.getCurrentTime?.() || 0, wasVideoPlaying: player?.getPlayerState?.() === YT.PlayerState.PLAYING,
-                    isTheaterMode, isFullscreen, currentPage, nextPageToken, currentSearchQuery
-                }));
-            } catch (e) { console.error(e); }
+        function onStateChange(e) {
+            if (!state.player) return;
+            state.player.mute(); state.player.setVolume(0);
+            const p = state.player;
+            
+            if (e.data === YT.PlayerState.PLAYING) {
+                state.transitioning = false;
+                if (!dom.audio.src) selectTrack(state.trackIndex, false);
+                if (dom.audio.paused) dom.audio.play().catch(() => {});
+                startProgressLoop(); scheduleHide(); updatePlayIcons(true);
+            } else if (e.data === YT.PlayerState.PAUSED) {
+                stopProgressLoop(); showOverlay();
+                if (!state.transitioning && !dom.audio.paused) dom.audio.pause();
+                updatePlayIcons(false);
+            } else if (e.data === YT.PlayerState.ENDED) {
+                stopProgressLoop(); showOverlay(); updatePlayIcons(false);
+                const idx = state.searchResults.findIndex(v => v.id === state.selectedVideoId);
+                if (idx >= 0 && idx < state.searchResults.length - 1) {
+                    loadVideo(state.searchResults[idx + 1], { auto: true, keep: true });
+                    showToast("Berikutnya: " + state.searchResults[idx + 1].title);
+                } else {
+                    if (!dom.audio.paused) dom.audio.pause();
+                }
+            }
+            saveState();
         }
 
-        function restoreSavedState() {
-            try {
-                const raw = localStorage.getItem(STORAGE_KEY);
-                if (!raw) { searchResults = defaultSuggestions; allSearchResults = [...defaultSuggestions]; renderResults(); return; }
-                const s = JSON.parse(raw);
-                searchQueryInput.value = s.searchQuery || "";
-                searchResults = Array.isArray(s.searchResults) && s.searchResults.length ? s.searchResults : defaultSuggestions;
-                allSearchResults = [...searchResults];
-                selectedTrackIndex = Number.isInteger(s.selectedTrackIndex) ? Math.min(Math.max(s.selectedTrackIndex, 0), audioTracks.length - 1) : 0;
-                maxRepeat = Math.max(1, Number(s.maxRepeat) || 3); currentRepeat = Math.max(0, Number(s.currentRepeat) || 0);
-                audioVolume.value = String(Math.max(0, Math.min(100, Number(s.volumeValue) || 72)));
-                audioElement.volume = audioVolume.value / 100; volumeValue.textContent = `${audioVolume.value}%`;
-                currentPage = s.currentPage || 1; nextPageToken = s.nextPageToken || null; currentSearchQuery = s.currentSearchQuery || "";
-                isTheaterMode = !!s.isTheaterMode; isFullscreen = !!s.isFullscreen;
-                updateTheaterModeUI(); updateFullscreenButtonUI(); renderResults(); updatePaginationUI();
-                selectTrack(selectedTrackIndex, false); updateRepeatUI();
-                if (s.selectedVideoId) pendingRestoreState = s;
-            } catch (e) { console.error(e); searchResults = defaultSuggestions; allSearchResults = [...defaultSuggestions]; renderResults(); selectTrack(selectedTrackIndex, false); }
+        // === PROGRESS LOOP ===
+        function startProgressLoop() {
+            stopProgressLoop();
+            let last = -1;
+            const tick = () => {
+                if (!state.player?.getCurrentTime) return;
+                const cur = state.player.getCurrentTime();
+                const dur = state.player.getDuration();
+                if (cur !== last || !state.progressFrame) {
+                    last = cur;
+                    updateDisplay(cur, dur);
+                }
+                state.progressFrame = requestAnimationFrame(tick);
+            };
+            state.progressFrame = requestAnimationFrame(tick);
         }
 
-        function restoreVideoState(s) {
-            if (!player || !s?.selectedVideoId) return;
-            const item = searchResults.find(i => i.id === s.selectedVideoId);
-            if (!item) return;
-            loadVideo(item, { startTime: s.currentVideoTime || 0, autoplay: !!s.wasVideoPlaying, minimized: !!s.playerMinimized, silentSave: true, preserveAudio: true });
+        function stopProgressLoop() {
+            if (state.progressFrame) { cancelAnimationFrame(state.progressFrame); state.progressFrame = null; }
         }
 
-        function iso8601ToClock(d) {
-            const m = d.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/); if (!m) return "--:--";
-            const h = +m[1]||0, min = +m[2]||0, sec = +m[3]||0;
-            return h ? `${String(h).padStart(2, "0")}:${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}` : `${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+        function updateDisplay(c = 0, d = 0) {
+            if (!state.player?.getCurrentTime) {
+                dom.timeDisplay.textContent = "00:00 / 00:00";
+                dom.progressValue.style.width = "0%";
+                return;
+            }
+            c = state.player.getCurrentTime() || c;
+            d = state.player.getDuration() || d;
+            dom.timeDisplay.textContent = `${fmt(c)} / ${fmt(d)}`;
+            dom.progressValue.style.width = d ? `${(c / d) * 100}%` : "0%";
         }
 
-        function filterTracks(q) {
-            const l = q.toLowerCase().trim();
-            filteredTracks = l ? audioTracks.filter(t => t.title.toLowerCase().includes(l) || t.reciter.toLowerCase().includes(l)) : [...audioTracks];
-            renderTrackList();
-        }
-        function renderTrackList() {
-            trackList.innerHTML = "";
-            if (!filteredTracks.length) { trackList.innerHTML = `<div class="track-item no-results"><i class="fa-solid fa-circle-xmark"></i> Tidak ada hasil</div>`; return; }
-            filteredTracks.forEach(t => {
-                const idx = audioTracks.findIndex(a => a.id === t.id);
-                const btn = document.createElement("button"); btn.type = "button"; btn.className = `track-item${idx === selectedTrackIndex ? " active" : ""}`;
-                btn.innerHTML = `<strong>${escapeHtml(t.title)}</strong><span>${escapeHtml(t.reciter)}</span>`;
-                btn.addEventListener("click", () => selectTrack(idx, true)); trackList.appendChild(btn);
-            });
-        }
-        function selectTrack(idx, auto = true) {
-            selectedTrackIndex = idx; currentRepeat = 0;
-            audioElement.src = audioTracks[idx].file; audioElement.load();
-            selectedTrackInfo.textContent = audioTracks[idx].title; audioMiniStatus.textContent = audioTracks[idx].reciter;
-            toggleAudioButton.innerHTML = '<i class="fa-solid fa-play"></i>'; updateRepeatUI(); renderTrackList(); saveAppState();
-            if (auto) audioElement.play().catch(() => {});
-        }
-        function updateRepeatUI() { repeatCountDisplay.textContent = maxRepeat; const p = Math.min(currentRepeat + 1, maxRepeat); repeatText.textContent = `Putaran ${p}/${maxRepeat}`; repeatProgressBar.style.width = `${(p / maxRepeat) * 100}%`; }
-        function setRepeatCount(c) { maxRepeat = Math.max(1, Math.min(20, c)); currentRepeat = 0; updateRepeatUI(); saveAppState(); showToast(`Pengulangan diatur ${maxRepeat} kali`); }
-        function playRandomTrack() { if (audioTracks.length < 2) return selectTrack(selectedTrackIndex, true); let n = selectedTrackIndex; while (n === selectedTrackIndex) n = Math.floor(Math.random() * audioTracks.length); selectTrack(n, true); showToast(`Surat diacak ke ${audioTracks[n].title}`); }
-        function toggleAudioPlayback() { if (!audioElement.src) selectTrack(selectedTrackIndex, false); audioElement.paused ? audioElement.play().catch(() => {}) : audioElement.pause(); }
-        function syncSelectedAudio() { if (!selectedVideoId) return showToast("Pilih video terlebih dahulu."); selectTrack(selectedTrackIndex, true); audioElement.currentTime = 0; }
-
-        function renderResults(append = false) {
-            if (!append) resultsContainer.innerHTML = "";
-            if (!searchResults.length && !append) { resultsContainer.innerHTML = '<div class="empty">Tidak ada hasil untuk kata kunci ini.</div>'; resultsCount.textContent = "0 hasil"; updatePaginationUI(); saveAppState(); return; }
-            const start = append ? resultsContainer.children.length : 0;
-            searchResults.slice(start).forEach(item => {
-                const card = document.createElement("article"); card.className = `result-item${item.id === selectedVideoId ? " active" : ""}`; card.dataset.videoId = item.id;
-                card.innerHTML = `<div class="result-thumb"><img src="${escapeHtml(item.thumbnail)}" alt="${escapeHtml(item.title)}" loading="lazy"><div class="duration">${escapeHtml(item.durationLabel)}</div></div><div class="result-body"><strong>${escapeHtml(item.title)}</strong><p>${escapeHtml(item.channelTitle)}</p><p>${escapeHtml(item.description)}</p></div>`;
-                card.addEventListener("click", () => { loadVideo(item); requestAnimationFrame(() => playerWrap.scrollIntoView({ behavior: 'smooth', block: 'start' })); });
-                resultsContainer.appendChild(card);
-            });
-            resultsCount.textContent = `${allSearchResults.length} hasil`; updatePaginationUI(); saveAppState();
+        function updatePlayIcons(playing) {
+            const icon = playing ? "fa-pause" : "fa-play";
+            dom.toggleVideo.querySelector("i").className = `fa-solid ${icon}`;
+            dom.toggleAudio.querySelector("i").className = `fa-solid ${dom.audio.paused ? "fa-play" : "fa-pause"}`;
         }
 
-        function updatePaginationUI() {
-            const shown = Math.min(searchResults.length, allSearchResults.length), total = allSearchResults.length;
-            if (total <= ITEMS_PER_PAGE) { loadMoreBtn.style.display = "none"; paginationInfo.textContent = total ? `Menampilkan ${total} video` : ""; return; }
-            paginationInfo.textContent = `Menampilkan ${shown} dari ${total} video`;
-            if (searchResults.length >= MAX_INLINE_ITEMS && hasMoreResults && !isLoadingMore) { loadMoreBtn.style.display = "block"; loadMoreBtn.disabled = false; loadMoreBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Muat Lebih Banyak'; }
-            else { loadMoreBtn.style.display = "none"; if (searchResults.length < MAX_INLINE_ITEMS && hasMoreResults) paginationInfo.textContent += ` • Scroll untuk muat lebih`; else if (!hasMoreResults) paginationInfo.textContent = `Semua ${total} video telah dimuat`; }
+        // === OVERLAY MANAGEMENT ===
+        function showOverlay() { dom.overlay.classList.remove("hidden"); dom.overlay.style.opacity = "1"; }
+        function hideOverlay() { dom.overlay.classList.add("hidden"); }
+        function scheduleHide(delay = 1500) {
+            clearTimeout(state.overlayTimer);
+            state.overlayTimer = setTimeout(() => {
+                if (dom.playerWrap.classList.contains("visible") && state.player?.getPlayerState?.() === YT.PlayerState.PLAYING) {
+                    hideOverlay();
+                }
+            }, delay);
         }
 
-        async function loadMoreResults() {
-            if (isLoadingMore || !hasMoreResults || !nextPageToken) return;
-            isLoadingMore = true; loadingMore.classList.add("active"); updatePaginationUI();
-            try {
-                const url = new URL("https://www.googleapis.com/youtube/v3/search");
-                url.searchParams.set("part", "snippet"); url.searchParams.set("type", "video"); url.searchParams.set("maxResults", String(ITEMS_PER_SCROLL));
-                url.searchParams.set("q", currentSearchQuery); url.searchParams.set("key", YOUTUBE_API_KEY); url.searchParams.set("pageToken", nextPageToken);
-                const res = await fetch(url); const data = await res.json();
-                if (!res.ok) throw new Error(data.error?.message || "Gagal");
-                const ids = (data.items || []).map(i => i.id?.videoId).filter(Boolean); if (!ids.length) { hasMoreResults = false; return; }
-                const dUrl = new URL("https://www.googleapis.com/youtube/v3/videos");
-                dUrl.searchParams.set("part", "contentDetails"); dUrl.searchParams.set("id", ids.join(",")); dUrl.searchParams.set("key", YOUTUBE_API_KEY);
-                const dRes = await fetch(dUrl); const dData = await dRes.json();
-                const dm = new Map((dData.items || []).map(i => [i.id, i.contentDetails?.duration || ""]));
-                const newItems = (data.items || []).map(i => ({ id: i.id.videoId, title: i.snippet.title, channelTitle: i.snippet.channelTitle, description: (i.snippet.description || "").slice(0, 120), thumbnail: i.snippet.thumbnails.medium?.url || "", durationLabel: iso8601ToClock(dm.get(i.id.videoId) || "") }));
-                allSearchResults.push(...newItems); searchResults.push(...newItems); nextPageToken = data.nextPageToken || null; hasMoreResults = !!nextPageToken;
-                renderResults(true); showToast(`memuat ${newItems.length} video lainnya`);
-            } catch (err) { showToast(`Gagal memuat: ${err.message}`); }
-            finally { isLoadingMore = false; loadingMore.classList.remove("active"); updatePaginationUI(); }
-        }
+        // === API FUNCTIONS ===
+        async function fetchWithDurations(params) {
+            const url = new URL("https://www.googleapis.com/youtube/v3/search");
+            Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
+            
+            const res = await fetch(url);
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error?.message || "Gagal memuat");
 
-        async function fetchRelatedVideos(vid) {
-            if (!vid) return []; try {
-                const url = new URL("https://www.googleapis.com/youtube/v3/search");
-                url.searchParams.set("part", "snippet"); url.searchParams.set("type", "video"); url.searchParams.set("maxResults", "8");
-                url.searchParams.set("relatedToVideoId", vid); url.searchParams.set("key", YOUTUBE_API_KEY); url.searchParams.set("relevanceLanguage", "id");
-                const res = await fetch(url); const data = await res.json(); if (!res.ok) throw new Error(data.error?.message);
-                const ids = (data.items || []).map(i => i.id?.videoId).filter(Boolean); if (!ids.length) return [];
-                const dUrl = new URL("https://www.googleapis.com/youtube/v3/videos"); dUrl.searchParams.set("part", "contentDetails"); dUrl.searchParams.set("id", ids.join(",")); dUrl.searchParams.set("key", YOUTUBE_API_KEY);
-                const dRes = await fetch(dUrl); const dData = await dRes.json(); const dm = new Map((dData.items || []).map(i => [i.id, i.contentDetails?.duration || ""]));
-                return (data.items || []).map(i => ({ id: i.id.videoId, title: i.snippet.title, channelTitle: i.snippet.channelTitle, thumbnail: i.snippet.thumbnails.medium?.url || "", durationLabel: iso8601ToClock(dm.get(i.id.videoId) || "") }));
-            } catch (e) { console.error(e); return []; }
-        }
+            const ids = (data.items || []).map(i => i.id?.videoId).filter(Boolean);
+            if (!ids.length) return { items: [], npt: null };
 
-        function renderRelatedVideos(videos) {
-            if (!videos.length) { relatedSection.style.display = "none"; return; }
-            relatedSection.style.display = "block"; relatedList.innerHTML = "";
-            videos.forEach(v => {
-                const el = document.createElement("div"); el.className = `related-item${v.id === selectedVideoId ? " active" : ""}`;
-                el.innerHTML = `<div class="related-thumb"><img src="${escapeHtml(v.thumbnail)}" alt="${escapeHtml(v.title)}" loading="lazy"><span class="related-duration">${escapeHtml(v.durationLabel)}</span></div><div class="related-body"><strong>${escapeHtml(v.title)}</strong><p>${escapeHtml(v.channelTitle)}</p></div>`;
-                el.addEventListener("click", () => { loadVideo(v, { preserveAudio: true }); fetchRelatedVideos(v.id).then(renderRelatedVideos); requestAnimationFrame(() => playerWrap.scrollIntoView({ behavior: 'smooth', block: 'start' })); });
-                relatedList.appendChild(el);
-            });
+            const cached = [], uncached = [];
+            ids.forEach(id => state.durationCache.has(id) ? cached.push({ id, dur: state.durationCache.get(id) }) : uncached.push(id));
+
+            const map = new Map(cached.map(c => [c.id, c.dur]));
+            if (uncached.length) {
+                const u2 = new URL("https://www.googleapis.com/youtube/v3/videos");
+                u2.searchParams.set("part", "contentDetails");
+                u2.searchParams.set("id", uncached.join(","));
+                u2.searchParams.set("key", CONFIG.API_KEY);
+                const r2 = await fetch(u2);
+                const d2 = await r2.json();
+                (d2.items || []).forEach(i => {
+                    const dur = i.contentDetails?.duration || "";
+                    state.durationCache.set(i.id, dur);
+                    map.set(i.id, dur);
+                });
+            }
+
+            return {
+                items: (data.items || []).map(i => ({
+                    id: i.id.videoId, title: i.snippet.title, channelTitle: i.snippet.channelTitle,
+                    description: (i.snippet.description || "").slice(0, 120),
+                    thumbnail: i.snippet.thumbnails.medium?.url || "", durationLabel: isoToClock(map.get(i.id.videoId) || "")
+                })),
+                npt: data.nextPageToken || null
+            };
         }
 
         async function searchVideos(append = false) {
-            const q = searchQueryInput.value.trim(); if (!q) { showToast("Masukkan kata kunci pencarian."); searchQueryInput.focus(); return; }
-            if (!append) { minimizePlayerForSearch(); searchButton.disabled = true; resultsContainer.innerHTML = '<div class="empty">Mengambil data dari YouTube...</div>'; loadingMore.classList.remove("active"); allSearchResults = []; searchResults = []; currentPage = 1; nextPageToken = null; currentSearchQuery = q; hasMoreResults = true; }
-            isLoadingMore = append; updatePaginationUI();
+            const q = dom.searchInput.value.trim();
+            if (!q) { showToast("Masukkan kata kunci pencarian."); dom.searchInput.focus(); return; }
+
+            if (!append) {
+                minimizeForSearch();
+                dom.searchBtn.disabled = true;
+                dom.results.innerHTML = '<div class="empty">Mengambil data...</div>';
+                dom.loading.classList.remove("active");
+                state.allResults = []; state.searchResults = [];
+                state.nextPageToken = null; state.query = q;
+                state.hasMore = true; state.isLoading = false;
+            }
+
+            state.isLoading = append; updatePagination();
+
             try {
-                const url = new URL("https://www.googleapis.com/youtube/v3/search");
-                url.searchParams.set("part", "snippet"); url.searchParams.set("type", "video");
-                url.searchParams.set("maxResults", String(append ? ITEMS_PER_SCROLL : ITEMS_PER_PAGE));
-                url.searchParams.set("q", q); url.searchParams.set("key", YOUTUBE_API_KEY); if (nextPageToken) url.searchParams.set("pageToken", nextPageToken);
-                const res = await fetch(url); const data = await res.json(); if (!res.ok) throw new Error(data.error?.message || "Gagal");
-                const ids = (data.items || []).map(i => i.id?.videoId).filter(Boolean); if (!ids.length) throw new Error("Tidak ada video ditemukan.");
-                const dUrl = new URL("https://www.googleapis.com/youtube/v3/videos"); dUrl.searchParams.set("part", "contentDetails"); dUrl.searchParams.set("id", ids.join(",")); dUrl.searchParams.set("key", YOUTUBE_API_KEY);
-                const dRes = await fetch(dUrl); const dData = await dRes.json(); const dm = new Map((dData.items || []).map(i => [i.id, i.contentDetails?.duration || ""]));
-                const newItems = (data.items || []).map(i => ({ id: i.id.videoId, title: i.snippet.title, channelTitle: i.snippet.channelTitle, description: (i.snippet.description || "").slice(0, 120), thumbnail: i.snippet.thumbnails.medium?.url || "", durationLabel: iso8601ToClock(dm.get(i.id.videoId) || "") }));
-                if (append) { allSearchResults.push(...newItems); searchResults.push(...newItems); } else { allSearchResults = [...newItems]; searchResults = [...newItems]; }
-                nextPageToken = data.nextPageToken || null; hasMoreResults = !!nextPageToken; renderResults(append);
-                if (!append && searchResults.length > 0) { const t = selectedVideoId ? searchResults.find(v => v.id === selectedVideoId) : searchResults[0]; if (t) fetchRelatedVideos(t.id).then(renderRelatedVideos); }
-            } catch (err) { if (!append) { searchResults = []; allSearchResults = []; renderResults(); } showToast(err.message); }
-            finally { searchButton.disabled = false; isLoadingMore = false; updatePaginationUI(); }
-        }
+                const r = await fetchWithDurations({
+                    part: "snippet", type: "video",
+                    maxResults: String(append ? CONFIG.ITEMS_PER_SCROLL : CONFIG.ITEMS_PER_PAGE),
+                    q: state.query, key: CONFIG.API_KEY,
+                    ...(state.nextPageToken && append ? { pageToken: state.nextPageToken } : {})
+                });
 
-        function loadVideo(item, opts = {}) {
-            if (!player?.loadVideoById) return showToast("Player belum siap.");
-            selectedVideoId = item.id; isVideoTransitioning = true;
-            const start = opts.startTime || 0;
-            if (opts.autoplay !== false) player.loadVideoById({ videoId: item.id, startSeconds: start });
-            else player.cueVideoById({ videoId: item.id, startSeconds: start });
-            player.mute(); player.setVolume(0);
-            playerWrap.classList.add("visible"); playerWrap.classList.toggle("minimized", !!opts.minimized);
-            playerWrap.classList.remove("controls-hidden");
-            videoInfo.classList.add("visible"); videoInfo.classList.toggle("minimized", !!opts.minimized);
-            playerOverlay.classList.remove("hidden");
-            currentTitle.textContent = item.title; currentMeta.textContent = `${item.channelTitle} - ${item.description}`;
-            renderResults(); fetchRelatedVideos(item.id).then(renderRelatedVideos); schedulePlayerControlsHide(1600);
-            if (!opts.silentSave) saveAppState();
-        }
+                if (append) {
+                    state.allResults.push(...r.items);
+                    state.searchResults.push(...r.items);
+                } else {
+                    state.allResults = [...r.items];
+                    state.searchResults = [...r.items];
+                }
+                state.nextPageToken = r.npt;
+                state.hasMore = !!r.npt;
+                renderResults(append);
 
-        function minimizePlayerForSearch() { if (!selectedVideoId || !playerWrap.classList.contains("visible")) return; if (isTheaterMode) toggleTheaterMode(); if (isFullscreen) toggleFullscreen(); playerWrap.classList.add("minimized"); videoInfo.classList.add("minimized"); setPlayerControlsVisible(true); requestAnimationFrame(() => resultsCard.scrollIntoView({ behavior: "smooth", block: "start" })); saveAppState(); }
-        function toggleVideoPlayback() { if (!player || !selectedVideoId) return showToast("Pilih video dulu."); player.getPlayerState() === YT.PlayerState.PLAYING ? player.pauseVideo() : (player.playVideo(), player.mute(), player.setVolume(0)); setPlayerControlsVisible(true); schedulePlayerControlsHide(); }
-        function toggleTheaterMode() { isTheaterMode = !isTheaterMode; updateTheaterModeUI(); saveAppState(); showToast(isTheaterMode ? "Theater mode aktif" : "Theater mode nonaktif"); }
-        function updateTheaterModeUI() { mainPage.classList.toggle("theater-mode", isTheaterMode); playerWrap.classList.toggle("theater", isTheaterMode); theaterBtn.classList.toggle("active", isTheaterMode); theaterBtn.querySelector("i").className = isTheaterMode ? "fa-solid fa-compress" : "fa-solid fa-expand"; }
-        function toggleFullscreen() { !document.fullscreenElement ? (playerWrap.requestFullscreen?.() || playerWrap.webkitRequestFullscreen?.()) : (document.exitFullscreen?.() || document.webkitExitFullscreen?.()); }
-        function updateFullscreenButtonUI() { isFullscreen = !!document.fullscreenElement; fullscreenBtn.querySelector("i").className = isFullscreen ? "fa-solid fa-compress" : "fa-solid fa-up-right-and-down-left-from-center"; fullscreenBtn.classList.toggle("active", isFullscreen); document.documentElement.classList.toggle("fullscreen-active", isFullscreen); saveAppState(); }
-        document.addEventListener("fullscreenchange", updateFullscreenButtonUI); document.addEventListener("webkitfullscreenchange", updateFullscreenButtonUI);
-
-        // ✅ FIX SCROLL: Listen to window scroll + bounding check on resultsCard
-        function handleScroll() {
-            if (!hasMoreResults || isLoadingMore || searchResults.length >= MAX_INLINE_ITEMS) return;
-            const rect = resultsCard.getBoundingClientRect();
-            const cardBottom = rect.bottom;
-            const viewportBottom = window.innerHeight;
-            // Trigger jika bagian bawah resultsCard berada dalam threshold dari bawah viewport
-            if (cardBottom > 0 && cardBottom < viewportBottom + SCROLL_THRESHOLD) {
-                loadMoreResults();
+                if (!append && state.searchResults.length) {
+                    const t = state.selectedVideoId 
+                        ? state.searchResults.find(v => v.id === state.selectedVideoId) 
+                        : state.searchResults[0];
+                    if (t) fetchRelated(t.id).then(renderRelated);
+                }
+            } catch (e) {
+                if (!append) { state.searchResults = []; state.allResults = []; renderResults(); }
+                showToast(e.message);
+            } finally {
+                dom.searchBtn.disabled = false;
+                state.isLoading = false;
+                updatePagination();
             }
         }
 
-        // Event Listeners
-        toggleVideoButton.addEventListener("click", toggleVideoPlayback);
-        playerShield.addEventListener("click", toggleVideoPlayback);
-        syncAudioSideButton.addEventListener("click", syncSelectedAudio);
-        document.getElementById("prev-track").addEventListener("click", () => selectTrack((selectedTrackIndex - 1 + audioTracks.length) % audioTracks.length, true));
-        document.getElementById("next-track").addEventListener("click", () => selectTrack((selectedTrackIndex + 1) % audioTracks.length, true));
-        shuffleTrackButton.addEventListener("click", playRandomTrack);
-        repeatDecreaseBtn.addEventListener("click", () => setRepeatCount(maxRepeat - 1));
-        repeatIncreaseBtn.addEventListener("click", () => setRepeatCount(maxRepeat + 1));
-        quickChipButtons.forEach(b => b.addEventListener("click", () => { searchQueryInput.value = b.dataset.query; searchVideos(); }));
-        toggleAudioButton.addEventListener("click", toggleAudioPlayback);
-        searchButton.addEventListener("click", () => searchVideos());
-        searchQueryInput.addEventListener("keydown", e => { if (e.key === "Enter") searchVideos(); });
-        audioVolume.addEventListener("input", () => { audioElement.volume = audioVolume.value / 100; volumeValue.textContent = `${audioVolume.value}%`; saveAppState(); });
-        murottalSearchInput.addEventListener("input", e => filterTracks(e.target.value));
-        theaterBtn.addEventListener("click", toggleTheaterMode);
-        fullscreenBtn.addEventListener("click", toggleFullscreen);
-        document.addEventListener("keydown", e => {
-            if (e.key.toLowerCase() === "f" && playerWrap.classList.contains("visible") && !document.activeElement.matches("input")) { e.preventDefault(); toggleFullscreen(); }
-            if (e.key.toLowerCase() === "t" && playerWrap.classList.contains("visible") && !document.activeElement.matches("input")) { e.preventDefault(); toggleTheaterMode(); }
-            if (e.key === "Escape") { if(isFullscreen) toggleFullscreen(); if(isTheaterMode) toggleTheaterMode(); }
-        });
-        progressBar.addEventListener("click", e => { if (!player?.getDuration) return; player.seekTo(player.getDuration() * ((e.clientX - progressBar.getBoundingClientRect().left) / progressBar.getBoundingClientRect().width), true); setPlayerControlsVisible(true); schedulePlayerControlsHide(); });
-        
-        playerExpandBtn.addEventListener("click", () => { playerWrap.classList.remove("minimized"); videoInfo.classList.remove("minimized"); saveAppState(); requestAnimationFrame(() => playerWrap.scrollIntoView({ behavior: 'smooth', block: 'start' })); });
-        loadMoreBtn.addEventListener("click", () => { if (nextPageToken && !isLoadingMore) loadMoreResults(); });
-        
-        // ✅ FIX: Window scroll listener menggantikan resultsCard scroll
-        window.addEventListener("scroll", handleScroll, { passive: true });
-        window.addEventListener("resize", handleScroll, { passive: true });
-        
-        refreshRelatedBtn.addEventListener("click", () => { if (selectedVideoId) { showToast("Memuat rekomendasi..."); fetchRelatedVideos(selectedVideoId).then(renderRelatedVideos); } });
-        audioElement.addEventListener("play", () => { audioMiniStatus.textContent = "Sedang diputar"; toggleAudioButton.innerHTML = '<i class="fa-solid fa-pause"></i>'; updateRepeatUI(); saveAppState(); });
-        audioElement.addEventListener("pause", () => { audioMiniStatus.textContent = "Dijeda"; toggleAudioButton.innerHTML = '<i class="fa-solid fa-play"></i>'; saveAppState(); });
-        audioElement.addEventListener("ended", () => { currentRepeat++; if (currentRepeat < maxRepeat) { audioElement.currentTime = 0; audioElement.play().catch(()=>{}); audioMiniStatus.textContent = "Mengulang"; updateRepeatUI(); saveAppState(); return; } audioMiniStatus.textContent = "Selesai"; toggleAudioButton.innerHTML = '<i class="fa-solid fa-play"></i>'; currentRepeat = 0; updateRepeatUI(); saveAppState(); });
-        audioElement.addEventListener("error", () => { audioMiniStatus.textContent = "Error"; showToast("Periksa file murottal."); });
+        async function loadMore() {
+            if (state.isLoading || !state.hasMore || !state.nextPageToken) return;
+            await searchVideos(true);
+        }
 
-        restoreSavedState();
-        if (!trackList.children.length) { renderTrackList(); selectTrack(selectedTrackIndex, false); audioElement.volume = audioVolume.value / 100; updateRepeatUI(); }
-        window.addEventListener("beforeunload", saveAppState);
+        async function fetchRelated(vid) {
+            if (!vid) return [];
+            try {
+                const r = await fetchWithDurations({
+                    part: "snippet", type: "video", maxResults: "8",
+                    relatedToVideoId: vid, key: CONFIG.API_KEY, relevanceLanguage: "id"
+                });
+                return r.items;
+            } catch (e) { console.error(e); return []; }
+        }
+
+        // === RENDERING ===
+        function createItem(item, type = "result") {
+            const active = item.id === state.selectedVideoId;
+            const el = document.createElement("div");
+            el.className = `${type}-item${active ? " active" : ""}`;
+            el.dataset.vid = item.id;
+            el.innerHTML = `
+                <div class="${type}-thumb">
+                    <img src="${escapeHtml(item.thumbnail)}" alt="" loading="lazy" decoding="async">
+                    <span class="${type === "result" ? "duration" : "related-duration"}">${escapeHtml(item.durationLabel)}</span>
+                </div>
+                <div class="${type}-body">
+                    <strong>${escapeHtml(item.title)}</strong>
+                    <p>${escapeHtml(item.channelTitle)}</p>
+                    ${type === "result" ? `<p>${escapeHtml(item.description)}</p>` : ""}
+                </div>`;
+            return el;
+        }
+
+        function renderResults(append = false) {
+            const frag = document.createDocumentFragment();
+            const slice = append 
+                ? state.searchResults.slice(dom.results.children.length) 
+                : state.searchResults;
+
+            if (!append) dom.results.innerHTML = "";
+            
+            if (!slice.length && !append) {
+                dom.results.innerHTML = '<div class="empty">Tidak ada hasil.</div>';
+                dom.resultsCount.textContent = "0 hasil";
+                updatePagination(); saveState(); return;
+            }
+
+            slice.forEach(item => {
+                const card = createItem(item);
+                card.addEventListener("click", () => {
+                    loadVideo(item);
+                    setTimeout(() => dom.playerWrap.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+                });
+                frag.appendChild(card);
+            });
+            dom.results.appendChild(frag);
+            dom.resultsCount.textContent = `${state.allResults.length} hasil`;
+            updatePagination(); saveState();
+        }
+
+        function renderRelated(videos) {
+            if (!videos?.length) { dom.relatedSection.style.display = "none"; return; }
+            dom.relatedSection.style.display = "block";
+            dom.relatedList.innerHTML = "";
+            const frag = document.createDocumentFragment();
+            videos.forEach(v => {
+                const el = createItem(v, "related");
+                el.addEventListener("click", () => {
+                    loadVideo(v, { keep: true });
+                    fetchRelated(v.id).then(renderRelated);
+                    setTimeout(() => dom.playerWrap.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+                });
+                frag.appendChild(el);
+            });
+            dom.relatedList.appendChild(frag);
+        }
+
+        function updatePagination() {
+            const shown = Math.min(state.searchResults.length, state.allResults.length);
+            const total = state.allResults.length;
+            
+            if (total <= CONFIG.ITEMS_PER_PAGE) {
+                dom.loadMoreBtn.style.display = "none";
+                dom.pageInfo.textContent = total ? `Menampilkan ${total} video` : ""; return;
+            }
+
+            dom.pageInfo.textContent = `Menampilkan ${shown} dari ${total} video`;
+            const canLoad = state.searchResults.length >= CONFIG.MAX_INLINE_ITEMS && state.hasMore && !state.isLoading;
+            dom.loadMoreBtn.style.display = canLoad ? "block" : "none";
+            dom.loadMoreBtn.disabled = false;
+            dom.loadMoreBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Muat Lebih Banyak';
+            
+            if (!canLoad && state.searchResults.length < CONFIG.MAX_INLINE_ITEMS && state.hasMore) {
+                dom.pageInfo.textContent += " • Scroll untuk muat lebih";
+            } else if (!state.hasMore) {
+                dom.pageInfo.textContent = `Semua ${total} video telah dimuat`;
+            }
+        }
+
+        // === VIDEO CONTROL ===
+        function loadVideo(item, opts = {}) {
+            if (!state.player?.loadVideoById) { showToast("Player belum siap."); return; }
+            state.selectedVideoId = item.id; state.transitioning = true;
+            
+            const start = opts.start || 0;
+            if (opts.auto !== false) state.player.loadVideoById({ videoId: item.id, startSeconds: start });
+            else state.player.cueVideoById({ videoId: item.id, startSeconds: start });
+            
+            state.player.mute(); state.player.setVolume(0);
+            dom.playerWrap.classList.add("visible");
+            dom.playerWrap.classList.toggle("minimized", !!opts.mini);
+            dom.videoInfo.classList.add("visible");
+            dom.videoInfo.classList.toggle("minimized", !!opts.mini);
+            showOverlay(); dom.playerWrap.classList.remove("controls-hidden");
+            
+            dom.title.textContent = item.title;
+            dom.meta.textContent = `${item.channelTitle} • ${item.description}`;
+            
+            renderResults();
+            fetchRelated(item.id).then(renderRelated);
+            scheduleHide(2000);
+            if (!opts.silent) saveState();
+        }
+
+        function minimizeForSearch() {
+            if (!state.selectedVideoId || !dom.playerWrap.classList.contains("visible")) return;
+            if (state.isTheater) toggleTheater();
+            if (state.isFullscreen) toggleFullscreen();
+            dom.playerWrap.classList.add("minimized");
+            dom.videoInfo.classList.add("minimized");
+            showOverlay();
+            setTimeout(() => dom.resultsCard.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+            saveState();
+        }
+
+        function togglePlayback() {
+            if (!state.player || !state.selectedVideoId) { showToast("Pilih video dulu."); return; }
+            state.player.getPlayerState() === YT.PlayerState.PLAYING ? state.player.pauseVideo() : (state.player.playVideo(), state.player.mute(), state.player.setVolume(0));
+            showOverlay(); scheduleHide();
+        }
+
+        // === THEATER & FULLSCREEN ===
+        function toggleTheater() {
+            state.isTheater = !state.isTheater;
+            dom.mainPage.classList.toggle("theater-mode", state.isTheater);
+            dom.playerWrap.classList.toggle("theater", state.isTheater);
+            dom.theaterBtn.classList.toggle("active", state.isTheater);
+            dom.theaterBtn.querySelector("i").className = state.isTheater ? "fa-solid fa-compress" : "fa-solid fa-expand";
+            saveState();
+            showToast(state.isTheater ? "Theater mode aktif" : "Theater mode nonaktif");
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) dom.playerWrap.requestFullscreen?.() || dom.playerWrap.webkitRequestFullscreen?.();
+            else document.exitFullscreen?.() || document.webkitExitFullscreen?.();
+        }
+
+        function updateFullscreenUI() {
+            state.isFullscreen = !!document.fullscreenElement;
+            dom.fullscreenBtn.querySelector("i").className = state.isFullscreen ? "fa-solid fa-compress" : "fa-solid fa-up-right-and-down-left-from-center";
+            dom.fullscreenBtn.classList.toggle("active", state.isFullscreen);
+            document.documentElement.classList.toggle("fullscreen-active", state.isFullscreen);
+            saveState();
+        }
+
+        // === AUDIO TRACKS ===
+        function filterTracks(q) {
+            const l = q.toLowerCase().trim();
+            state.filteredTracks = l 
+                ? audioTracks.filter(t => t.title.toLowerCase().includes(l) || t.reciter.toLowerCase().includes(l))
+                : [...audioTracks];
+            renderTracks();
+        }
+
+        function renderTracks() {
+            const frag = document.createDocumentFragment();
+            dom.trackList.innerHTML = "";
+            
+            if (!state.filteredTracks.length) {
+                dom.trackList.innerHTML = '<div class="track-item no-results"><i class="fa-solid fa-circle-xmark"></i> Tidak ada hasil</div>';
+                return;
+            }
+            
+            state.filteredTracks.forEach(t => {
+                const idx = audioTracks.findIndex(a => a.id === t.id);
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = `track-item${idx === state.trackIndex ? " active" : ""}`;
+                btn.innerHTML = `<strong>${escapeHtml(t.title)}</strong><span>${escapeHtml(t.reciter)}</span>`;
+                btn.addEventListener("click", () => selectTrack(idx, true));
+                frag.appendChild(btn);
+            });
+            dom.trackList.appendChild(frag);
+        }
+
+        function selectTrack(idx, auto = true) {
+            state.trackIndex = idx; state.currentRepeat = 0;
+            dom.audio.src = audioTracks[idx].file; dom.audio.load();
+            dom.trackInfo.textContent = audioTracks[idx].title;
+            dom.status.textContent = audioTracks[idx].reciter;
+            dom.toggleAudio.querySelector("i").className = "fa-solid fa-play";
+            updateRepeatUI(); renderTracks(); saveState();
+            if (auto) dom.audio.play().catch(() => {});
+        }
+
+        function updateRepeatUI() {
+            dom.repeatCount.textContent = state.maxRepeat;
+            const p = Math.min(state.currentRepeat + 1, state.maxRepeat);
+            dom.repeatText.textContent = `Putaran ${p}/${state.maxRepeat}`;
+            dom.repeatBar.style.width = `${(p / state.maxRepeat) * 100}%`;
+        }
+
+        function setRepeat(c) {
+            state.maxRepeat = Math.max(1, Math.min(20, c));
+            state.currentRepeat = 0; updateRepeatUI(); saveState();
+            showToast(`Pengulangan diatur ${state.maxRepeat} kali`);
+        }
+
+        function playRandom() {
+            if (audioTracks.length < 2) return selectTrack(state.trackIndex, true);
+            let n = state.trackIndex;
+            while (n === state.trackIndex) n = Math.floor(Math.random() * audioTracks.length);
+            selectTrack(n, true);
+            showToast(`Surat diacak ke ${audioTracks[n].title}`);
+        }
+
+        function toggleAudio() {
+            if (!dom.audio.src) selectTrack(state.trackIndex, false);
+            dom.audio.paused ? dom.audio.play().catch(() => {}) : dom.audio.pause();
+        }
+
+        // === RESTORE STATE ===
+        function restoreState() {
+            try {
+                const raw = localStorage.getItem(CONFIG.STORAGE_KEY);
+                if (!raw) {
+                    state.searchResults = defaultSuggestions;
+                    state.allResults = [...defaultSuggestions];
+                    renderResults(); return;
+                }
+                const s = JSON.parse(raw);
+                dom.searchInput.value = s.q || "";
+                state.searchResults = Array.isArray(s.results) && s.results.length ? s.results : defaultSuggestions;
+                state.allResults = [...state.searchResults];
+                state.trackIndex = Number.isInteger(s.tid) ? Math.min(Math.max(s.tid, 0), audioTracks.length - 1) : 0;
+                state.maxRepeat = Math.max(1, Number(s.maxR) || 3);
+                state.currentRepeat = Math.max(0, Number(s.curR) || 0);
+                dom.volume.value = String(Math.max(0, Math.min(100, Number(s.vol) || 72)));
+                dom.audio.volume = dom.volume.value / 100;
+                dom.volVal.textContent = `${dom.volume.value}%`;
+                state.nextPageToken = s.npt || null;
+                state.query = s.query || "";
+                state.isTheater = !!s.theater; state.isFullscreen = !!s.fs;
+                
+                dom.mainPage.classList.toggle("theater-mode", state.isTheater);
+                dom.playerWrap.classList.toggle("theater", state.isTheater);
+                dom.theaterBtn.classList.toggle("active", state.isTheater);
+                dom.theaterBtn.querySelector("i").className = state.isTheater ? "fa-solid fa-compress" : "fa-solid fa-expand";
+                updateFullscreenUI();
+                
+                renderResults(); updatePagination();
+                selectTrack(state.trackIndex, false); updateRepeatUI();
+                if (s.vid) state.pendingRestore = s;
+            } catch (e) {
+                console.error(e);
+                state.searchResults = defaultSuggestions;
+                state.allResults = [...defaultSuggestions];
+                renderResults(); selectTrack(state.trackIndex, false);
+            }
+        }
+
+        function restoreVideoState(s) {
+            if (!state.player || !s?.vid) return;
+            const item = state.searchResults.find(i => i.id === s.vid);
+            if (!item) return;
+            loadVideo(item, { start: s.time || 0, auto: !!s.playing, mini: !!s.mini, silent: true, keep: true });
+        }
+
+        // === INTERSECTION OBSERVER (Infinite Scroll) ===
+        function setupObserver() {
+            const sentinel = document.createElement("div");
+            sentinel.style.height = "1px"; sentinel.style.visibility = "hidden";
+            dom.resultsCard.appendChild(sentinel);
+
+            state.observer = new IntersectionObserver(([entry]) => {
+                if (entry.isIntersecting && !state.isLoading && state.hasMore && state.searchResults.length < CONFIG.MAX_INLINE_ITEMS) {
+                    loadMore();
+                }
+            }, { rootMargin: `${CONFIG.SCROLL_THRESHOLD}px` });
+            state.observer.observe(sentinel);
+        }
+
+        // === EVENT LISTENERS ===
+        function setupEvents() {
+            dom.toggleVideo.addEventListener("click", togglePlayback);
+            dom.shield.addEventListener("click", togglePlayback);
+            dom.expandBtn.addEventListener("click", () => {
+                dom.playerWrap.classList.remove("minimized");
+                dom.videoInfo.classList.remove("minimized");
+                saveState();
+                setTimeout(() => dom.playerWrap.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+            });
+            dom.progressBar.addEventListener("click", e => {
+                if (!state.player?.getDuration) return;
+                const r = dom.progressBar.getBoundingClientRect();
+                state.player.seekTo(state.player.getDuration() * Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)), true);
+                showOverlay(); scheduleHide();
+            });
+
+            dom.toggleAudio.addEventListener("click", toggleAudio);
+            dom.prev.addEventListener("click", () => selectTrack((state.trackIndex - 1 + audioTracks.length) % audioTracks.length, true));
+            dom.next.addEventListener("click", () => selectTrack((state.trackIndex + 1) % audioTracks.length, true));
+            dom.shuffle.addEventListener("click", playRandom);
+            dom.syncBtn.addEventListener("click", () => {
+                if (!state.selectedVideoId) return showToast("Pilih video dulu.");
+                selectTrack(state.trackIndex, true); dom.audio.currentTime = 0;
+            });
+            dom.repeatDec.addEventListener("click", () => setRepeat(state.maxRepeat - 1));
+            dom.repeatInc.addEventListener("click", () => setRepeat(state.maxRepeat + 1));
+            dom.volume.addEventListener("input", () => {
+                dom.audio.volume = dom.volume.value / 100;
+                dom.volVal.textContent = `${dom.volume.value}%`;
+                saveState();
+            });
+
+            dom.audio.addEventListener("play", () => { dom.status.textContent = "Diputar"; dom.toggleAudio.querySelector("i").className = "fa-solid fa-pause"; updateRepeatUI(); saveState(); });
+            dom.audio.addEventListener("pause", () => { dom.status.textContent = "Dijeda"; dom.toggleAudio.querySelector("i").className = "fa-solid fa-play"; saveState(); });
+            dom.audio.addEventListener("ended", () => {
+                state.currentRepeat++;
+                if (state.currentRepeat < state.maxRepeat) {
+                    dom.audio.currentTime = 0; dom.audio.play().catch(() => {});
+                    dom.status.textContent = "Mengulang"; updateRepeatUI(); saveState(); return;
+                }
+                dom.status.textContent = "Selesai"; dom.toggleAudio.querySelector("i").className = "fa-solid fa-play";
+                state.currentRepeat = 0; updateRepeatUI(); saveState();
+            });
+            dom.audio.addEventListener("error", () => { dom.status.textContent = "Error"; showToast("Gagal memuat audio."); });
+
+            dom.searchBtn.addEventListener("click", () => searchVideos());
+            dom.searchInput.addEventListener("keydown", e => { if (e.key === "Enter") searchVideos(); });
+            dom.chips.forEach(b => b.addEventListener("click", () => { dom.searchInput.value = b.dataset.query; searchVideos(); }));
+            
+            let searchTimer;
+            dom.trackSearch.addEventListener("input", e => {
+                clearTimeout(searchTimer);
+                searchTimer = setTimeout(() => filterTracks(e.target.value), 200);
+            });
+
+            dom.theaterBtn.addEventListener("click", toggleTheater);
+            dom.fullscreenBtn.addEventListener("click", toggleFullscreen);
+            document.addEventListener("fullscreenchange", updateFullscreenUI);
+            document.addEventListener("webkitfullscreenchange", updateFullscreenUI);
+
+            document.addEventListener("keydown", e => {
+                if (document.activeElement.matches("input, textarea")) return;
+                const k = e.key.toLowerCase();
+                if (k === "f" && dom.playerWrap.classList.contains("visible")) { e.preventDefault(); toggleFullscreen(); }
+                if (k === "t" && dom.playerWrap.classList.contains("visible")) { e.preventDefault(); toggleTheater(); }
+                if (k === " ") { e.preventDefault(); togglePlayback(); }
+                if (k === "escape" && (state.isFullscreen || state.isTheater)) { if (state.isFullscreen) toggleFullscreen(); if (state.isTheater) toggleTheater(); }
+            });
+
+            dom.loadMoreBtn.addEventListener("click", () => { if (state.nextPageToken && !state.isLoading) loadMore(); });
+            dom.refreshRelated.addEventListener("click", () => { if (state.selectedVideoId) { showToast("Memuat..."); fetchRelated(state.selectedVideoId).then(renderRelated); } });
+            
+            window.addEventListener("beforeunload", saveState);
+        }
+
+        // === INIT ===
+        function init() {
+            restoreState();
+            setupEvents();
+            setupObserver();
+            if (!dom.trackList.children.length) {
+                renderTracks();
+                selectTrack(state.trackIndex, false);
+                dom.audio.volume = dom.volume.value / 100;
+                updateRepeatUI();
+            }
+        }
+
+        document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", init) : init();
     </script>
 </body>
 </html>
+
